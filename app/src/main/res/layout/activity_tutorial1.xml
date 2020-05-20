@@ -1,73 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
-    android:layout_margin="10dp"
-    android:paddingHorizontal="3dp"
+    android:orientation="vertical"
     tools:context=".Tutorial1Activity">
-    <TextView
-        android:id="@+id/textView"
-        style="@style/TextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="16dp"
-        android:lineSpacingExtra="9sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.52"
-        tools:text="프로젝트 주제" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginBottom="8dp"
-        android:lineSpacingExtra="9sp"
-        android:paddingLeft="12dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="5dp"
-        android:textColor="#000000"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/view"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:text="개인 프라이버시를 보호하는\n협업 학습을 활용한\n스마트폰 사용 패턴 분석 및\n스트레스 예측" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="382dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:lineSpacingExtra="9sp"
+            android:text="프로젝트 주제" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="357dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="5dp"
+            android:lineSpacingExtra="5sp"
+            android:paddingLeft="12dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="5dp"
+            android:textColor="#000000"
+            android:textSize="17dp"
+            android:text="개인 프라이버시를 보호하는\n협업 학습을 활용한\n스마트폰 사용 패턴 분석 및\n스트레스 예측" />
 
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="wrap_content"
-        android:layout_height="3dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:background="#2463b6"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        <View
+            android:id="@+id/view"
+            android:layout_width="wrap_content"
+            android:layout_height="3dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="25dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="25dp"
+            android:background="#2463b6" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="334dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:paddingHorizontal="7dp"
+        android:layout_weight="2.2"
         android:lineSpacingExtra="8sp"
+        android:scrollbars="vertical"
+        android:scrollbarSize="5dp"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
         android:text="안녕하세요,\n\n저희는 건국대학교 컴퓨터공학부 졸업프로젝트 팀인 천세진, 김지효, 조원빈입니다.\n\n이 프로젝트는 사용자의 스마트폰 사용 패턴과 스트레스 수준 설문조사를 통해 인공지능 모델을 구축하고, 스트레스 수준을 예측하고자 합니다.\n\n이 앱에서 수집한 자료는 연구 목적으로만 사용되며, 프로젝트 종료 후 폐기될 것입니다."
         android:textColor="#000000"
         android:textSize="19dp"
@@ -78,9 +76,10 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
         android:layout_gravity="center"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/nextButton1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -107,15 +106,12 @@
 
     <Button
         android:id="@+id/nextButton1"
-        android:background="@drawable/button_radius"
         android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center"
+        android:background="@drawable/button_radius"
         android:text="다음"
         android:textColor="#FFFFFF"
-        android:textSize="20dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:textSize="20dp" />
+</LinearLayout>
