@@ -42,7 +42,7 @@ class StressCollectActivity : AppCompatActivity() {
             }else{
                 //TODO: Add data to db
                 Toast.makeText(this,"데이터 전송"+time,Toast.LENGTH_SHORT).show()
-                finish()
+
             }
         }
     }
