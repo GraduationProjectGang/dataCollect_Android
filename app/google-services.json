@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "367032775815",
+    "firebase_url": "https://datacollect-18877.firebaseio.com",
+    "project_id": "datacollect-18877",
+    "storage_bucket": "datacollect-18877.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:367032775815:android:fdb998ed75a76b89977422",
+        "android_client_info": {
+          "package_name": "com.example.datacollect_android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "367032775815-4sds63v4slo50t950r5gd1jcabtaudtq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.datacollect_android",
+            "certificate_hash": "b3baa3d8d994d178caa774da58130e93f6b38cc1"
+          }
+        },
+        {
+          "client_id": "367032775815-d2dt1eo9hgis6ikif3td5mc2nsijqr7f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPFRp2SyCjaqDPdobY2dTjVdl_3HHaaT4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "367032775815-d2dt1eo9hgis6ikif3td5mc2nsijqr7f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
