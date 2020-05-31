@@ -4,15 +4,22 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
+
+    val INTERNET_REQUEST = 1234
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +40,12 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, StressCollectActivity::class.java)
             startActivity(intent)
         }
+        fbBtn.setOnClickListener {
+            val intent = Intent(this, FBTestActivity::class.java)
+            startActivity(intent)
+        }
+
+        initPermission()
     }
 
     fun notifySurvey(){
@@ -67,4 +80,30 @@ class MainActivity : AppCompatActivity() {
             notify(200, builder.build())
         }
     }
+
+    fun askPermission(requestPermission: Array<String>, REQ_PERMISSION: Int) {
+        ActivityCompat.requestPermissions(this, requestPermission, REQ_PERMISSION)
+    }
+
+    fun checkAppPermission(request: Array<String>): Boolean { //앞으로 많이 사용하게 될 함수임
+        val requestResult = BooleanArray(request.size)
+        for (i in requestResult.indices) {
+            requestResult[i] = ContextCompat.checkSelfPermission(this, request[i]) == PackageManager.PERMISSION_GRANTED
+            if (!requestResult[i]) {
+                return false
+            }
+        }
+        return true
+    }
+
+    fun initPermission() {
+        if(checkAppPermission(arrayOf(android.Manifest.permission.INTERNET))) {
+            Toast.makeText(this, "인터넷 권한 승인됨", Toast.LENGTH_SHORT).show()
+        }
+        else {
+            askPermission(arrayOf(android.Manifest.permission.INTERNET), INTERNET_REQUEST)
+        }
+    }
+
+
 }
