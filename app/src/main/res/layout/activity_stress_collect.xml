@@ -5,7 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    android:scrollbarSize="3dp"
     tools:context=".StressCollectActivity">
+
     <TextView
         android:layout_marginTop="35dp"
         android:layout_width="wrap_content"
@@ -16,196 +19,275 @@
         android:lineSpacingExtra="8sp"
         android:text="스트레스 정도를 설문을 통해 수집합니다. "
         />
-    <TextView
-        android:layout_margin="15dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="17dp"
-        android:textSize="25dp"
-        android:textColor="#2463b6"
-        android:lineSpacingExtra="9sp"
-        android:text="Q1."
-        />
-
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:layout_marginLeft="37dp"
-        android:textColor="#000000"
-        android:lineSpacingExtra="8sp"
-        android:text="ex.현재 스트레스 정도가 어느정도입니까?"
-        />
-
-    <RadioGroup
-        android:id="@+id/stressRadio1"
-        android:gravity="center"
-        android:padding="3dp"
-        android:layout_marginVertical="30dp"
-        android:orientation="horizontal"
+    <ScrollView
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbars="vertical"
+        android:scrollbarSize="2dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="0dp"
+        android:layout_weight="3">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_margin="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="17dp"
+                android:textSize="20dp"
+                android:textColor="#2463b6"
+                android:lineSpacingExtra="9sp"
+                android:text="Q1."
+                />
 
-        <RadioButton
-            android:layout_margin="4dp"
-            android:textSize="19dp"
-            android:id="@+id/radioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1점" />
 
-        <RadioButton
-            android:layout_margin="4dp"
-            android:textSize="19dp"
-            android:id="@+id/radioButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2점" />
-        <RadioButton
-            android:layout_margin="4dp"
-            android:textSize="19dp"
-            android:id="@+id/radioButton3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3점" />
-        <RadioButton
-            android:layout_margin="4dp"
-            android:textSize="19dp"
-            android:id="@+id/radioButton4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4점" />
-        <RadioButton
-            android:layout_margin="4dp"
-            android:textSize="19dp"
-            android:id="@+id/radioButton5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="5점" />
-    </RadioGroup>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:layout_marginLeft="17dp"
-        android:textSize="25dp"
-        android:textColor="#2463b6"
-        android:lineSpacingExtra="9sp"
-        android:text="Q2."
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:layout_marginLeft="37dp"
-        android:textColor="#000000"
-        android:lineSpacingExtra="8sp"
-        android:text="ex.현재 스트레스 정도가 어느정도입니까?"
-        />
-    <RadioGroup
-        android:id="@+id/stressRadio2"
-        android:gravity="center"
-        android:padding="3dp"
-        android:layout_marginVertical="30dp"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17dp"
+                android:layout_marginLeft="20dp"
+                android:textColor="#000000"
+                android:lineSpacingExtra="8sp"
+                android:text="중요한 일을 조절할 수 없다고 느낀 적이 얼마나 자주 있었습니까?
+"
+                />
 
-        <RadioButton
-            android:layout_margin="4dp"
-            android:textSize="19dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1점" />
+            <RadioGroup
+                android:id="@+id/stressRadio1"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textAlignment="center"
+                android:tooltipText="1점: 거의 없다, 5점: 매우 자주 있다"
+                android:layout_marginVertical="15dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
 
-        <RadioButton
-            android:layout_margin="4dp"
-            android:textSize="19dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2점" />
-        <RadioButton
-            android:layout_margin="4dp"
-            android:textSize="19dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3점" />
-        <RadioButton
-            android:layout_margin="4dp"
-            android:textSize="19dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4점" />
-        <RadioButton
-            android:layout_margin="4dp"
-            android:textSize="19dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="5점" />
-    </RadioGroup>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:layout_marginLeft="17dp"
-        android:textSize="25dp"
-        android:textColor="#2463b6"
-        android:lineSpacingExtra="9sp"
-        android:text="Q3."
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:layout_marginLeft="37dp"
-        android:textColor="#000000"
-        android:lineSpacingExtra="8sp"
-        android:text="ex.현재 스트레스 정도가 어느정도입니까?"
-        />
-    <RadioGroup
-        android:id="@+id/stressRadio3"
-        android:gravity="center"
-        android:padding="3dp"
-        android:layout_marginVertical="30dp"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:id="@+id/radioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1점" />
 
-        <RadioButton
-            android:layout_margin="4dp"
-            android:textSize="19dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1점" />
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:id="@+id/radioButton2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2점" />
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:id="@+id/radioButton3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3점" />
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:id="@+id/radioButton4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4점" />
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:id="@+id/radioButton5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5점" />
+            </RadioGroup>
 
-        <RadioButton
-            android:layout_margin="4dp"
-            android:textSize="19dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2점" />
-        <RadioButton
-            android:layout_margin="4dp"
-            android:textSize="19dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3점" />
-        <RadioButton
-            android:layout_margin="4dp"
-            android:textSize="19dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4점" />
-        <RadioButton
-            android:layout_margin="4dp"
-            android:textSize="19dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="5점" />
-    </RadioGroup>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:layout_marginLeft="17dp"
+                android:textSize="20dp"
+                android:textColor="#2463b6"
+                android:lineSpacingExtra="9sp"
+                android:text="Q2."
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17dp"
+                android:layout_marginLeft="20dp"
+                android:textColor="#000000"
+                android:lineSpacingExtra="8sp"
+                android:text="개인적인 문제를 잘 처리할 수 있다고 자신감을 가진 적이 얼마나 자주 있었습니까?
+"
+                />
+            <RadioGroup
+                android:id="@+id/stressRadio2"
+                android:gravity="center"
+                android:padding="3dp"
+                android:layout_marginVertical="15dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1점" />
+
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2점" />
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3점" />
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4점" />
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5점" />
+            </RadioGroup>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:layout_marginLeft="17dp"
+                android:textSize="20dp"
+                android:textColor="#2463b6"
+                android:lineSpacingExtra="9sp"
+                android:text="Q3."
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17dp"
+                android:layout_marginLeft="20dp"
+                android:textColor="#000000"
+                android:lineSpacingExtra="8sp"
+                android:text="일이 내 뜻대로 진행되고 있다고 느낀 적이 얼마나 자주 있었습니까?"
+                />
+            <RadioGroup
+                android:id="@+id/stressRadio3"
+                android:gravity="center"
+                android:padding="3dp"
+                android:layout_marginVertical="15dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1점" />
+
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2점" />
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3점" />
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4점" />
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5점" />
+            </RadioGroup>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:layout_marginLeft="17dp"
+                android:textSize="20dp"
+                android:textColor="#2463b6"
+                android:lineSpacingExtra="9sp"
+                android:text="Q4."
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17dp"
+                android:layout_marginLeft="20dp"
+                android:textColor="#000000"
+                android:lineSpacingExtra="8sp"
+                android:text="어려운 일이 너무 많아져서 극복할 수 없다고 느낀 적이 얼마나 자주 있었습니까?
+"
+                />
+            <RadioGroup
+                android:id="@+id/stressRadio4"
+                android:gravity="center"
+                android:padding="3dp"
+                android:layout_marginVertical="15dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1점" />
+
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2점" />
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3점" />
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4점" />
+                <RadioButton
+                    android:layout_margin="4dp"
+                    android:textSize="17dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5점" />
+            </RadioGroup>
+        </LinearLayout>
+
+    </ScrollView>
     <Button
         android:id="@+id/stressFinishBtn"
         android:layout_width="150dp"

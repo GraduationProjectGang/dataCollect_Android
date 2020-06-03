@@ -1,11 +1,11 @@
 package com.example.datacollect_android
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_fbtest.*
+
 
 class FBTestActivity : AppCompatActivity() {
 
