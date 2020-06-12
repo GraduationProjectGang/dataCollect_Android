@@ -5,15 +5,159 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="4dp"
     tools:context=".SignInActivity">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        style="@style/TextStyleNormal"
+        android:text="기본정보를 입력해주세요. 연구 이외의 목적으로는 사용되지 않습니다.\n\n
+    - 닉네임 (익명성을 위함)\n
+    - 학년\n
+    - 성별\n
+    - 휴대폰번호"
+        />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.3"
+        >
+        <LinearLayout
+            android:layout_margin="3dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                style="@style/TextStyleBold"
+                android:background="@drawable/button_radius"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:padding="7dp"
+                android:layout_margin="3dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:text="별명"
+                />
+            <EditText
+                android:id="@+id/user_nickname"
+                style="@style/TextStyleBold"
+                android:layout_width="0dp"
+                android:layout_weight="1.3"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_margin="3dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                style="@style/TextStyleBold"
+                android:background="@drawable/button_radius"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:padding="7dp"
+                android:layout_margin="3dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:text="성별"
+                />
+            <Spinner
+                android:id="@+id/user_gender"
+                style="@style/TextStyleBold"
+                android:entries="@array/gender"
+                android:layout_width="0dp"
+                android:layout_weight="1.3"
+                android:layout_height="match_parent"
+                android:spinnerMode="dropdown"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_margin="3dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                style="@style/TextStyleBold"
+                android:background="@drawable/button_radius"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:padding="7dp"
+                android:layout_margin="3dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:text="학년"
+                />
+            <Spinner
+                android:id="@+id/user_grade"
+                style="@style/TextStyleBold"
+                android:entries="@array/grade_array"
+                android:layout_width="0dp"
+                android:layout_weight="1.3"
+                android:layout_height="match_parent"
+                android:spinnerMode="dropdown"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_margin="3dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                style="@style/TextStyleBold"
+                android:background="@drawable/button_radius"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:padding="7dp"
+                android:layout_margin="3dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:text="휴대폰 번호"
+                />
+            <EditText
+                android:id="@+id/user_phonenum"
+                style="@style/TextStyleBold"
+                android:textStyle="normal"
+                android:layout_width="0dp"
+                android:layout_weight="1.3"
+                android:layout_height="wrap_content"
+                android:hint="ex) 01012345678"
+                />
+        </LinearLayout>
+    </LinearLayout>
+    <Button
+        android:id="@+id/google_login"
+        android:drawableLeft="@drawable/googlele"
+        android:layout_gravity="center"
+        android:text="Sign in with Google"
+        android:drawablePadding="10dp"
+        android:padding="16dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        android:textSize="18dp"
+        android:background="@drawable/button_radius_gray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         >
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
             android:textSize="25dp"
@@ -25,11 +169,7 @@
             android:checkMark="@color/colorAccent"
             android:layout_gravity="right"
             />
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/google_login"
-            android:layout_width="match_parent"
-            android:layout_height="50sp"
-            />
+
     </LinearLayout>
 
 

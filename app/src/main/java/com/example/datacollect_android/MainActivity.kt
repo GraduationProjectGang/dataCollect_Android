@@ -31,8 +31,6 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
-    val INTERNET_REQUEST = 1234
-    var permissionArr = arrayOf(android.Manifest.permission.PACKAGE_USAGE_STATS)
 //    lateinit var dataCollectThread: Runnable
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,11 +58,14 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, StressCollectActivity::class.java)
             startActivity(intent)
         }
+        loginBtn.setOnClickListener {
+            val intent = Intent(this, SignInActivity::class.java)
+            startActivity(intent)
+        }
         fbBtn.setOnClickListener {
             val intent = Intent(this, FBTestActivity::class.java)
             startActivity(intent)
         }
-        initPermission()
         initCollectingData()
     }
 
@@ -144,36 +145,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun askPermission(requestPermission: Array<String>, REQ_PERMISSION: Int) {
-        ActivityCompat.requestPermissions(this, requestPermission, REQ_PERMISSION)
-    }
-
-    fun checkAppPermission(request: Array<String>): Boolean { //앞으로 많이 사용하게 될 함수임
-        val requestResult = BooleanArray(request.size)
-        for (i in requestResult.indices) {
-            requestResult[i] = ContextCompat.checkSelfPermission(this, request[i]) == PackageManager.PERMISSION_GRANTED
-            if (!requestResult[i]) {
-                Toast.makeText(
-                    this,
-                    "Failed to retrieve app usage statistics. " +
-                            "You may need to enable access for this app through " +
-                            "Settings > Security > Apps with usage access",
-                    Toast.LENGTH_LONG
-                ).show()
-                //startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
-            }
-        }
-        return true
-    }
-
-    fun initPermission() {
-        if(checkAppPermission(permissionArr)) {
-            Toast.makeText(this, "권한 승인됨", Toast.LENGTH_SHORT).show()
-        }
-        else {
-            askPermission(permissionArr, INTERNET_REQUEST)
-        }
-    }
 
     fun initCollectingData(){
         val constraints = Constraints.Builder()
