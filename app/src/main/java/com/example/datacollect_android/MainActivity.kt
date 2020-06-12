@@ -1,6 +1,5 @@
 package com.example.datacollect_android
 
-import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -10,9 +9,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.hardware.TriggerEvent
+import android.hardware.TriggerEventListener
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -22,24 +21,15 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
-
-
 
 
 class MainActivity : AppCompatActivity() {
 
     val INTERNET_REQUEST = 1234
-    val permissionArr = arrayOf(
-        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-        Manifest.permission.PACKAGE_USAGE_STATS,
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.ACCESS_FINE_LOCATION
-    )
+    var permissionArr = arrayOf(android.Manifest.permission.PACKAGE_USAGE_STATS)
 //    lateinit var dataCollectThread: Runnable
-    lateinit var sensorManager: SensorManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,10 +41,7 @@ class MainActivity : AppCompatActivity() {
         //TODO:적절한 시간에 설문 알림
         var result = getAppUsageStats()
         showAppUsageStats(result)
-        Log.d("appusing","finished")
-        getMotionData()
-        Log.d("appusing","motiondata")
-        initLocation()
+        Log.d("using","finished")
     }
 
     fun init(){
@@ -74,92 +61,6 @@ class MainActivity : AppCompatActivity() {
         }
         initPermission()
 
-    }
-    fun initLocation() {
-        var TAG = "applocation"
-
-        var fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
-        }
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location ->
-                if(location == null) {
-                    Log.e(TAG, "location get fail")
-                } else {
-                    Log.d(TAG, "${location.latitude} , ${location.longitude}")
-                }
-            }
-            .addOnFailureListener {
-                Log.e(TAG, "location error is ${it.message}")
-                it.printStackTrace()
-            }
-    }
-
-    fun getMotionData(){
-        val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        val gSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-        val aSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-
-
-
-//        val mSensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION)
-
-//        val triggerEventListener = object : TriggerEventListener() {
-//            override fun onTrigger(event: TriggerEvent?) {
-//                Log.d("appusing","significant")
-//                Toast.makeText(applicationContext,"significant motion",Toast.LENGTH_SHORT).show()
-//            }
-//        }
-
-        var sensorEventListener = object : SensorEventListener {
-            override fun onSensorChanged(event: SensorEvent?) {
-
-                when(event!!.sensor.type){
-                     Sensor.TYPE_ROTATION_VECTOR ->{
-                                val str = ("방향센서값 "
-                                        + "방위각: " + event.values[0]
-                                        + "피치 : " + event.values[1]
-                                        + "롤 : " + event.values[2])
-                        Log.d("sensorchange",str)
-                         sensor_x.text = event.values[2].toString()
-                         sensor_y.text = event.values[1].toString()
-                         sensor_z.text = event.values[0].toString()
-                    }
-                    Sensor.TYPE_ACCELEROMETER ->{
-                        val str = ("방향센서값 "
-                                + "방위각: " + event.values[0]
-                                + "피치 : " + event.values[1]
-                                + "롤 : " + event.values[2])
-                        Log.d("sensorchangeacc",str)
-                        asensor_x.text = event.values[2].toString()
-                        asensor_y.text = event.values[1].toString()
-                        asensor_z.text = event.values[0].toString()
-                    }
-                }
-            }
-
-            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-                Log.d("stracc",accuracy.toString())
-            }
-        }
-        sensorManager.registerListener(sensorEventListener,gSensor,SensorManager.SENSOR_DELAY_NORMAL)
-        sensorManager.registerListener(sensorEventListener,aSensor,SensorManager.SENSOR_DELAY_NORMAL)
     }
 
     fun getAppUsageStats(): MutableList<UsageStats> {
@@ -189,6 +90,22 @@ class MainActivity : AppCompatActivity() {
                     "totalTimeInForeground: ${it.totalTimeInForeground}")
         }
     }
+
+
+    fun getMotionData(){
+        val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val mSensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION)
+        val triggerEventListener = object : TriggerEventListener() {
+            override fun onTrigger(event: TriggerEvent?) {
+                Toast.makeText(applicationContext,"significant motion",Toast.LENGTH_SHORT).show()
+            }
+        }
+        mSensor?.also { sensor ->
+            sensorManager.requestTriggerSensor(triggerEventListener, sensor)
+        }
+    }
+
+
 
     fun notifySurvey(){
         val CHANNEL_ID = "$packageName-${getString(R.string.app_name)}"
