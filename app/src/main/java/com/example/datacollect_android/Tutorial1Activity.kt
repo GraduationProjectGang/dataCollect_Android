@@ -11,7 +11,7 @@ class Tutorial1Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutorial1)
         nextButton1.setOnClickListener {
-            val intent = Intent(this,Tutorial2Activity::class.java)
+            val intent = Intent(this,Tutorial2Activity::class.java) //다음이어질 액티비티
             startActivity(intent)
             overridePendingTransition(0, 0)
             finish()
