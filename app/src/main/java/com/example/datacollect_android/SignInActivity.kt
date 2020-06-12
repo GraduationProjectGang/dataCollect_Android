@@ -53,7 +53,7 @@ class SignInActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         val account = GoogleSignIn.getLastSignedInAccount(this)
-        if (account !== null) {
+        if (account != null) {
             toMainActivity(firebaseAuth.currentUser)
         }
     }
