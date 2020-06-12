@@ -25,11 +25,12 @@
             android:checkMark="@color/colorAccent"
             android:layout_gravity="right"
             />
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/google_login"
+            android:layout_width="match_parent"
+            android:layout_height="50sp"
+            />
     </LinearLayout>
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/google_login"
-        android:layout_width="match_parent"
-        android:layout_height="50sp"
-        />
+
 </LinearLayout>
