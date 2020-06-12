@@ -21,8 +21,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.work.Constraints
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
@@ -39,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("rearea",this.toString())
 
         //TODO:적절한 시간에 설문 알림
+
         var result = getAppUsageStats()
         showAppUsageStats(result)
         Log.d("using","finished")
@@ -60,7 +65,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         initPermission()
-
+        initCollectingData()
     }
 
     fun getAppUsageStats(): MutableList<UsageStats> {
@@ -74,7 +79,6 @@ class MainActivity : AppCompatActivity() {
         val queryUsageStats = usageStatsManager.queryUsageStats(
             UsageStatsManager.INTERVAL_DAILY, cal.timeInMillis, System.currentTimeMillis()
         )
-
 
         return queryUsageStats
     }
@@ -170,4 +174,18 @@ class MainActivity : AppCompatActivity() {
             askPermission(permissionArr, INTERNET_REQUEST)
         }
     }
+
+    fun initCollectingData(){
+        val constraints = Constraints.Builder()
+            .setRequiresCharging(true)
+            .build()
+
+        val collectRequest =
+            PeriodicWorkRequestBuilder<DataCollectWorker>(15, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build()
+        
+        WorkManager.getInstance(applicationContext)
+            .enqueue(collectRequest)
     }
+}
