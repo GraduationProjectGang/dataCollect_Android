@@ -122,7 +122,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
     fun toMainActivity(user: FirebaseUser?) {
-        if(user !== null) {
+        if(user != null) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
