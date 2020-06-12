@@ -17,9 +17,6 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    kotlinOptions{
-        jvmTarget="1.8"
-    }
     buildTypes {
         release {
             minifyEnabled false
@@ -39,7 +36,6 @@ android {
 }
 
 dependencies {
-    implementation "androidx.work:work-runtime-ktx:2.3.4"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
