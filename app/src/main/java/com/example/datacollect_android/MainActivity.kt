@@ -67,6 +67,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         initCollectingData()
+        button2.setOnClickListener {
+            val intent = Intent(this, SignInActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     fun getAppUsageStats(): MutableList<UsageStats> {
