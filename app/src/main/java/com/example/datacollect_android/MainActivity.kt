@@ -173,8 +173,7 @@ class MainActivity : AppCompatActivity() {
         val queryUsageStats = usageStatsManager.queryUsageStats(
             UsageStatsManager.INTERVAL_DAILY, cal.timeInMillis, System.currentTimeMillis()
         )
-
-
+        Log.d("appusing",queryUsageStats.size.toString())
         return queryUsageStats
     }
 
