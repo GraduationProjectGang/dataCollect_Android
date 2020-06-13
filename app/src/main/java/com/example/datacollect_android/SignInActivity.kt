@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -22,6 +23,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.DatabaseReference
 import kotlinx.android.synthetic.main.activity_sign_in.*
 
 //<uses-permission android:name="com.google.android.things.permission.MANAGE_GNSS_DRIVERS" />
@@ -68,7 +70,8 @@ class SignInActivity : AppCompatActivity() {
         button_start.setOnClickListener {
             val nickname =  user_nickname.text
             val phonenum = user_phonenum.text
-
+            val gender = (user_gender as TextView).text
+            val grade = (user_grade as TextView).text
 
 
 
@@ -76,6 +79,7 @@ class SignInActivity : AppCompatActivity() {
 
 
     }
+
     override fun onStart() {
         super.onStart()
         val account = GoogleSignIn.getLastSignedInAccount(this)
