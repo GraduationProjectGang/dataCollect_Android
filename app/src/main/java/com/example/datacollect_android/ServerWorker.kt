@@ -14,8 +14,6 @@ class ServerWorker(appContext: Context, workerParams: WorkerParameters) : Worker
 
         if (flag) {
 
-
-
             return Result.success()
         }
         else {

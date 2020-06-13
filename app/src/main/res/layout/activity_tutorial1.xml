@@ -7,12 +7,15 @@
     android:layout_gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".Tutorial1Activity">
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="9"
+    android:orientation="vertical">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         >
         <TextView
             style="@style/TextStyle"
@@ -47,8 +50,6 @@
             android:layout_height="3dp"
             android:layout_gravity="center"
             android:layout_marginStart="25dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="5dp"
             android:layout_marginEnd="32dp"
             android:layout_marginRight="25dp"
             android:background="#2463b6" />
@@ -58,10 +59,9 @@
     <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="8dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:paddingHorizontal="7dp"
-        android:layout_weight="2.2"
         android:lineSpacingExtra="8sp"
         android:scrollbars="vertical"
         android:scrollbarSize="5dp"
@@ -69,15 +69,19 @@
         android:text="안녕하세요,\n\n저희는 건국대학교 컴퓨터공학부 졸업프로젝트 팀인 천세진, 김지효, 조원빈입니다.\n\n이 프로젝트는 사용자의 스마트폰 사용 패턴과 스트레스 수준 설문조사를 통해 인공지능 모델을 구축하고, 스트레스 수준을 예측하고자 합니다.\n\n이 앱에서 수집한 자료는 연구 목적으로만 사용되며, 프로젝트 종료 후 폐기될 것입니다."
         android:textColor="#000000"
         android:textSize="19dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+ />
+</LinearLayout>
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:layout_marginBottom="10dp"
+    android:orientation="vertical">
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
         android:orientation="horizontal"
@@ -102,6 +106,14 @@
             android:layout_height="13dp"
             android:layout_marginHorizontal="3dp"
             android:src="@drawable/empty_swipe" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_marginHorizontal="3dp"
+            android:layout_weight="1"
+            android:src="@drawable/empty_swipe" />
     </LinearLayout>
 
     <Button
@@ -114,4 +126,6 @@
         android:text="다음"
         android:textColor="#FFFFFF"
         android:textSize="20dp" />
+</LinearLayout>
+
 </LinearLayout>
