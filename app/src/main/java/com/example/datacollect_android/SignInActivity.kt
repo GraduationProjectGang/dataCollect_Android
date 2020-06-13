@@ -3,6 +3,24 @@ package com.example.datacollect_android
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -33,7 +51,30 @@ class SignInActivity : AppCompatActivity() {
         initPermission()
         initFirebase()
     }
+    fun init() {
+        firebaseAuth = FirebaseAuth.getInstance()
+        //User(nickname,gender,grade,phonenum)
 
+
+        val gender_array = arrayOf("남성","여성")
+        val grade_array = arrayOf("1","2","3","4")
+        val genderAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, gender_array)
+        user_gender.adapter = genderAdapter
+        val gradeAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, gender_array)
+        user_gender.adapter = genderAdapter
+
+
+        button_start.setOnClickListener {
+            val nickname =  user_nickname.text
+            val phonenum = user_phonenum.text
+
+
+
+
+        }
+
+
+    }
     override fun onStart() {
         super.onStart()
         checkPreviousUser()
@@ -43,6 +84,23 @@ class SignInActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     fun initFirebase() {
         fbDatabase = FirebaseDatabase.getInstance()
