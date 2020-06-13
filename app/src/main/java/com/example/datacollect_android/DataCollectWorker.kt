@@ -18,32 +18,37 @@ import java.time.LocalDateTime
 
 class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
     : CoroutineWorker(appContext, workerParams) {
-    override val coroutineContext = Dispatchers.IO
+    //reference doc link
+    //https://developer.android.com/topic/libraries/architecture/workmanager/advanced/coroutineworker
 
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun doWork(): Result = coroutineScope {
-        var i = 0;
+        val iterationRange = 60
         val jobs =
-
             async {
-                for (i in 1 .. 10){
+                for (i in 1 .. iterationRange){
+                    //Repeat every 1s
                     delay(1000L)
-                    getLocation()
-                    Log.d("coroutine", LocalDateTime.now().toString())
+                    //getRotateVector()
+                    val location = getLocation()
+                    Log.d("coroutineTest", LocalDateTime.now().toString())
                 }
             }
 
-        // awaitAll will throw an exception if a download fails, which CoroutineWorker will treat as a failure
         Result.success()
     }
-    private fun getLocation() {
+    private fun getRotateVector() : MutableList<Double>{
+        return mutableListOf()
+    }
+    private fun getLocation() : MutableMap<String, Double>{
         val TAG = "locationTest"
+        var ret = mutableMapOf<String, Double>()
         if (ActivityCompat.checkSelfPermission(applicationContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
             && ActivityCompat.checkSelfPermission(applicationContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
             && ActivityCompat.checkSelfPermission(applicationContext, android.Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED
         ) {
             Log.e(TAG, "permission get failed")
-            return
+            return mutableMapOf()
         }
 
         var fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(applicationContext)
@@ -53,12 +58,16 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
                     Log.e(TAG, "location get fail")
                 } else {
                     Log.d(TAG, "${location.latitude} , ${location.longitude}")
+                    ret["latitude"] = location.latitude
+                    ret["longitude"] = location.longitude
                 }
             }
             .addOnFailureListener {
                 Log.e(TAG, "location error is ${it.message}")
                 it.printStackTrace()
             }
+
+        return ret
     }
 
 }
