@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -20,12 +21,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SignInActivity">
+        <receiver
+            android:name=".BootReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".AlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.alarmclock.ALARM_ALERT" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".SignInActivity">
+
         </activity>
         <activity android:name=".FBTestActivity" />
         <activity android:name=".StressCollectActivity" />
@@ -33,6 +48,11 @@
         <activity android:name=".Tutorial2Activity" />
         <activity android:name=".Tutorial1Activity" />
         <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
