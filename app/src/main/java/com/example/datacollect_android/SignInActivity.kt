@@ -3,20 +3,6 @@ package com.example.datacollect_android
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -27,6 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.*
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.activity_sign_in.*
 
 class SignInActivity : AppCompatActivity() {
     val MULTIPLE_REQUEST = 1234
@@ -52,9 +39,6 @@ class SignInActivity : AppCompatActivity() {
         initFirebase()
     }
     fun init() {
-        firebaseAuth = FirebaseAuth.getInstance()
-        //User(nickname,gender,grade,phonenum)
-
 
         val gender_array = arrayOf("남성","여성")
         val grade_array = arrayOf("1","2","3","4")
