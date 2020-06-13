@@ -16,7 +16,7 @@
         android:textColor="@android:color/black"
         android:textSize="20dp"
         android:text="기본정보를 입력해주세요. 연구 이외의 목적으로는 사용되지 않습니다.\n\n
-    - 닉네임 (익명성을 위함)\n
+    - 별명(익명성을 위함)\n
     - 학년\n
     - 성별\n
     - 휴대폰번호"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content">
             <TextView
                 style="@style/TextStyleBold"
-                android:background="@drawable/button_radius"
+                android:background="@drawable/button_radius_gray"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
                 android:layout_margin="3dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:text="별명"
                 />
             <EditText
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content">
             <TextView
                 style="@style/TextStyleBold"
-                android:background="@drawable/button_radius"
+                android:background="@drawable/button_radius_gray"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
                 android:layout_margin="3dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:text="성별"
                 />
             <Spinner
@@ -87,7 +87,7 @@
             android:layout_height="wrap_content">
             <TextView
                 style="@style/TextStyleBold"
-                android:background="@drawable/button_radius"
+                android:background="@drawable/button_radius_gray"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
                 android:layout_margin="3dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:text="학년"
                 />
             <Spinner
@@ -114,7 +114,7 @@
             android:layout_height="wrap_content">
             <TextView
                 style="@style/TextStyleBold"
-                android:background="@drawable/button_radius"
+                android:background="@drawable/button_radius_gray"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -122,7 +122,7 @@
                 android:layout_margin="3dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:text="휴대폰 번호"
                 />
             <EditText
@@ -160,20 +160,56 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/google_login"
-        android:layout_width="wrap_content"
-        android:layout_height="55dp"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginVertical="10dp"
-        android:background="@drawable/button_radius_gray"
-        android:drawableLeft="@drawable/googlele"
-        android:drawablePadding="20dp"
-        android:fontFamily="sans-serif-condensed"
-        android:padding="16dp"
-        android:text="Sign in with Google"
-        android:textSize="18dp" />
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/nextButton3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
+        <ImageView
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_marginHorizontal="3dp"
+            android:src="@drawable/empty_swipe" />
+
+        <ImageView
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_marginHorizontal="3dp"
+            android:src="@drawable/empty_swipe" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_marginHorizontal="3dp"
+            android:src="@drawable/empty_swipe" />
+
+        <ImageView
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_marginHorizontal="3dp"
+            android:src="@drawable/full_swipe" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="70dp"
+        android:layout_marginTop="20dp"
+        android:text="시작하기"
+        android:background="@drawable/button_radius"
+        style="@style/TextStyleNormal"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"
+        />
 
 </LinearLayout>

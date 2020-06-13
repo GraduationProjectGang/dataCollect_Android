@@ -109,6 +109,14 @@
             android:layout_height="13dp"
             android:layout_marginHorizontal="3dp"
             android:src="@drawable/empty_swipe" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_marginHorizontal="3dp"
+            android:layout_weight="1"
+            android:src="@drawable/empty_swipe" />
     </LinearLayout>
 
     <Button
