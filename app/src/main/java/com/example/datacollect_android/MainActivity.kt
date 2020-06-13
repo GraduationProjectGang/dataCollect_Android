@@ -21,15 +21,26 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.work.Constraints
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
 
     val INTERNET_REQUEST = 1234
-    var permissionArr = arrayOf(android.Manifest.permission.PACKAGE_USAGE_STATS)
+    var permissionArr = arrayOf(
+        android.Manifest.permission.PACKAGE_USAGE_STATS,
+        android.Manifest.permission.ACCESS_FINE_LOCATION,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.ACCESS_BACKGROUND_LOCATION)
 //    lateinit var dataCollectThread: Runnable
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +48,6 @@ class MainActivity : AppCompatActivity() {
         init()
         notifySurvey()//설문 알림
         Log.d("rearea",this.toString())
-
         //TODO:적절한 시간에 설문 알림
         var result = getAppUsageStats()
         showAppUsageStats(result)
@@ -59,6 +69,9 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, FBTestActivity::class.java)
             startActivity(intent)
         }
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        initCollectingData()
         initPermission()
 
     }
@@ -155,6 +168,7 @@ class MainActivity : AppCompatActivity() {
                             "Settings > Security > Apps with usage access",
                     Toast.LENGTH_LONG
                 ).show()
+                return false
                 //startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
             }
         }
@@ -169,4 +183,42 @@ class MainActivity : AppCompatActivity() {
             askPermission(permissionArr, INTERNET_REQUEST)
         }
     }
+    fun initCollectingData(){
+
+        val constraints = Constraints.Builder()
+            .setRequiresCharging(true)
+            .build()
+
+        val collectRequest =
+            PeriodicWorkRequestBuilder<DataCollectWorker>(15, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build()
+
+        WorkManager.getInstance(applicationContext)
+            .enqueue(collectRequest)
+    }
+    private fun getLocation() {
+        val TAG = "locationTest"
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location ->
+                if(location == null) {
+                    Log.e(TAG, "location get fail")
+                } else {
+                    Log.d(TAG, "${location.latitude} , ${location.longitude}")
+                }
+            }
+            .addOnFailureListener {
+                Log.e(TAG, "location error is ${it.message}")
+                it.printStackTrace()
+            }
+    }
+
     }
