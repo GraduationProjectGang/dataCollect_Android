@@ -3,6 +3,7 @@ package com.example.datacollect_android
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -12,21 +13,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.*
+import com.google.firebase.database.*
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_sign_in.*
+import java.io.File
+import java.io.FileWriter
 
 class SignInActivity : AppCompatActivity() {
-    val MULTIPLE_REQUEST = 1234
-
-    var permissionArr = arrayOf(
-        android.Manifest.permission.PACKAGE_USAGE_STATS,
-        android.Manifest.permission.ACCESS_NETWORK_STATE,
-        android.Manifest.permission.ACCESS_COARSE_LOCATION,
-        android.Manifest.permission.ACCESS_FINE_LOCATION,
-        android.Manifest.permission.INTERNET,
-        android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
-        )
 
     lateinit var fbDatabase: FirebaseDatabase
     lateinit var dbReference: DatabaseReference
@@ -36,25 +30,61 @@ class SignInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_sign_in)
         super.onCreate(savedInstanceState)
-        initPermission()
+        //initPermission()
         initFirebase()
+
+        init()
     }
+
     fun init() {
 
         val gender_array = arrayOf("남성","여성")
         val grade_array = arrayOf("1","2","3","4")
         val genderAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, gender_array)
         user_gender.adapter = genderAdapter
-        val gradeAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, gender_array)
-        user_gender.adapter = genderAdapter
+        val gradeAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, grade_array)
+        user_grade.adapter = gradeAdapter
+
+
 
 
         button_start.setOnClickListener {
-            val nickname =  user_nickname.text
-            val phonenum = user_phonenum.text
-            val gender = (user_gender as TextView).text
-            val grade = (user_grade as TextView).text
+            val nickname =  user_nickname.text.toString()
+            val phonenum = user_phonenum.text.toString()
+            val gender = user_gender.selectedItem.toString()
+            val grade = user_grade.selectedItem.toString().toInt()
 
+            val Listener = object: ChildEventListener {
+
+                override fun onCancelled(p0: DatabaseError) {
+                    Log.e("LI_FBError", p0.toException().toString())
+                }
+
+                override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+
+                }
+
+                override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                }
+
+                override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+
+                    val key = p0.getValue(UserInfo::class.java)
+                    Log.w("LI_KEY", key!!.uniqueKey)
+                    val file = File(Environment.getExternalStorageDirectory().absolutePath+"/datacollect.txt")
+                    var fw = FileWriter(file)
+                    fw.write(key!!.uniqueKey)
+                }
+
+                override fun onChildRemoved(p0: DataSnapshot) {
+                }
+
+            }
+
+            dbReference.addChildEventListener(Listener)
+
+            userInfo = UserInfo(nickname, phonenum, "123", gender, grade)
+            dbReference.child("user").push().setValue(userInfo)
 
 
         }
@@ -72,29 +102,9 @@ class SignInActivity : AppCompatActivity() {
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     fun initFirebase() {
         fbDatabase = FirebaseDatabase.getInstance()
         dbReference = fbDatabase.reference
-
-
-
     }
 
     fun checkPreviousUser():Boolean {
@@ -102,28 +112,6 @@ class SignInActivity : AppCompatActivity() {
         return true
     }
 
-    fun initPermission() {
-        var rejectedPermissionList = ArrayList<String>()
-
-        for (permission in permissionArr) {
-            if (checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                rejectedPermissionList.add(permission)
-            }
-        }
-        if(rejectedPermissionList.isNotEmpty()) {
-            val array = arrayOfNulls<String>(rejectedPermissionList.size)
-            ActivityCompat.requestPermissions(this, rejectedPermissionList.toArray(array), MULTIPLE_REQUEST)
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        //super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            MULTIPLE_REQUEST -> {
-                Toast.makeText(this, "권한 모두 승인됨", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
 
 
 }
