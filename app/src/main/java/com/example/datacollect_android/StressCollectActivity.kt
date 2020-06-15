@@ -2,6 +2,7 @@ package com.example.datacollect_android
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -44,7 +45,27 @@ class StressCollectActivity : AppCompatActivity() {
                 Toast.makeText(this,"모든 질문에 답해주세요",Toast.LENGTH_SHORT).show()
             }else{
                 //TODO: Add data to db
-                Toast.makeText(this,"데이터 전송"+time.toString(),Toast.LENGTH_SHORT).show()
+                when(input[1]){
+                    0-> input[1]=4
+                    1-> input[1]=3
+                    3-> input[1]=1
+                    4-> input[1]=0
+
+                }
+                when(input[2]){
+                    0-> input[2]=4
+                    1-> input[2]=3
+                    3-> input[2]=1
+                    4-> input[2]=0
+                }
+
+                //다 더한 점수 저장, 만점: 16점
+                var score = 0
+                for(i in input){
+                    score = score + i
+                }
+                Log.d("surveyscore",score.toString())
+                Toast.makeText(this,"점수: ${score}",Toast.LENGTH_SHORT).show()
                 finish()
             }
         }
