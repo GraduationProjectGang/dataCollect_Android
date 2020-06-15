@@ -2,4 +2,9 @@
     <string name="app_name">dataCollect_Android</string>
     <string name="channel_name">스트레스 측정</string>
     <string name="channel_description">스트레스 측정</string>
+    <string name="zero">0점</string>
+    <string name="one">1점</string>
+    <string name="two">2점</string>
+    <string name="three">3점</string>
+    <string name="four">4점</string>
 </resources>

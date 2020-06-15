@@ -1,5 +1,6 @@
 package com.example.datacollect_android
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -17,6 +18,7 @@ import android.hardware.TriggerEventListener
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
+import android.provider.ContactsContract
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -26,9 +28,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
-import androidx.work.Constraints
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -77,6 +77,8 @@ class MainActivity : AppCompatActivity() {
 
     fun init() {
         initAlarm()
+        initCollectingData()
+
         /////////ButtonListener
         tutorialBtn.setOnClickListener {
             val intent = Intent(this, Tutorial1Activity::class.java)
@@ -96,7 +98,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        initCollectingData()
         button2.setOnClickListener {
             val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
@@ -119,20 +120,37 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("EnqueueWork")
+    private fun initCollectingData() {
+
+        val constraints = Constraints.Builder()
+            .setRequiresCharging(true)
+            .build()
+
+        val collectRequest =
+            PeriodicWorkRequestBuilder<DataCollectWorker>(15, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build()
+
+        WorkManager.getInstance(applicationContext)
+            .enqueue(collectRequest)
+
+
+
+        //for instant test
+
+
+//        WorkManager.getInstance().enqueue(OneTimeWorkRequest.Builder(DataCollectWorker::class.java).build())
+
+    }
+
     fun initAlarm() {
 
         setAlarmAt(14)
         setAlarmAt(22)
         // Set the alarm to start at approximately 2p.m. and 10p.m.
 
-        val pm: PackageManager = this.packageManager
-        val receiver = ComponentName(this, BootReceiver::class.java)
-
-        pm.setComponentEnabledSetting(
-            receiver,
-            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-            PackageManager.DONT_KILL_APP
-        );
+        BootReceiver()
 
     }
 
@@ -159,11 +177,13 @@ class MainActivity : AppCompatActivity() {
 //                    System.currentTimeMillis()+6000,
 //                    pendingIntent
 //                )
-            alarmManager.setAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                pendingIntent
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    pendingIntent
+                )
+            }
         }
     }
 
@@ -199,32 +219,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun getMotionData() {
-        val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        val mSensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION)
-        val triggerEventListener = object : TriggerEventListener() {
-            override fun onTrigger(event: TriggerEvent?) {
-                Toast.makeText(applicationContext, "significant motion", Toast.LENGTH_SHORT).show()
-            }
-        }
-        mSensor?.also { sensor ->
-            sensorManager.requestTriggerSensor(triggerEventListener, sensor)
-        }
-    }
 
-    private fun initCollectingData() {
 
-        val constraints = Constraints.Builder()
-            .setRequiresCharging(true)
-            .build()
-
-        val collectRequest =
-            PeriodicWorkRequestBuilder<DataCollectWorker>(15, TimeUnit.MINUTES)
-                .setConstraints(constraints)
-                .build()
-
-        WorkManager.getInstance(applicationContext)
-            .enqueue(collectRequest)
-    }
 
 }
