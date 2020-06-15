@@ -1,9 +1,6 @@
 package com.example.datacollect_android
 
-import android.app.AlarmManager
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.ComponentName
@@ -17,6 +14,7 @@ import android.hardware.TriggerEventListener
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -41,9 +39,8 @@ import kotlin.Comparator
 
 
 class MainActivity : AppCompatActivity() {
+    val MULTIPLE_REQUEST = 1234
 
-
-    val INTERNET_REQUEST = 1234
     var permissionArr = arrayOf(
         android.Manifest.permission.PACKAGE_USAGE_STATS,
         android.Manifest.permission.ACCESS_FINE_LOCATION,
@@ -63,14 +60,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         init()
+        initPermission()
+        initUsageStats()
 
-       // notifySurvey()//설문 알림
-        Log.d("rearea", this.toString())
 
-        //TODO:적절한 시간에 설문 알림
-        var result = getAppUsageStats()
-        showAppUsageStats(result)
-        Log.d("using", "finished")
     }
 
 
@@ -78,6 +71,11 @@ class MainActivity : AppCompatActivity() {
     fun init() {
         initAlarm()
         /////////ButtonListener
+        usermainBtn.setOnClickListener {
+            val intent = Intent(this, UserMainActivity::class.java)
+            startActivity(intent)
+            overridePendingTransition(0, 0)
+        }
         tutorialBtn.setOnClickListener {
             val intent = Intent(this, Tutorial1Activity::class.java)
             startActivity(intent)
@@ -116,6 +114,32 @@ class MainActivity : AppCompatActivity() {
                 // Log and toast
                 Log.d("firere", token)
             })
+
+    }
+
+    private fun initUsageStats() {
+        val TAG = "usageStats"
+        var granted = false
+        val appOps = getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+        val mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,android.os.Process.myUid(), getPackageName());
+
+        if (mode == AppOpsManager.MODE_DEFAULT) {
+            granted = (checkCallingOrSelfPermission(android.Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED);
+        } else {
+            granted = (mode == AppOpsManager.MODE_ALLOWED);
+        }
+
+        Log.d(TAG, "===== CheckPhoneState isRooting granted = " + granted);
+
+        if (granted == false)
+        {
+            // 권한이 없을 경우 권한 요구 페이지 이동
+            val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+            startActivity(intent)
+        }
+
+        var result = getAppUsageStats()
+        showAppUsageStats(result)
 
     }
 
@@ -159,11 +183,36 @@ class MainActivity : AppCompatActivity() {
 //                    System.currentTimeMillis()+6000,
 //                    pendingIntent
 //                )
-            alarmManager.setAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                pendingIntent
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    pendingIntent
+                )
+            }
+        }
+    }
+
+    fun initPermission() {
+        var rejectedPermissionList = ArrayList<String>()
+
+        for (permission in permissionArr) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                rejectedPermissionList.add(permission)
+            }
+        }
+        if(rejectedPermissionList.isNotEmpty()) {
+            val array = arrayOfNulls<String>(rejectedPermissionList.size)
+            ActivityCompat.requestPermissions(this, rejectedPermissionList.toArray(array), MULTIPLE_REQUEST)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        //super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            MULTIPLE_REQUEST -> {
+                Toast.makeText(this, "권한 모두 승인됨", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

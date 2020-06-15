@@ -58,6 +58,8 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
         jobs.join()
         Result.success()
     }
+
+
     private fun getRotateVector(){
 
         sensorManager = applicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager

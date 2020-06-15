@@ -18,10 +18,10 @@ class BootReceiver : BroadcastReceiver() {
         // This method is called when the BroadcastReceiver is receiving an Intent broadcast.
             val receiver = ComponentName(context, BroadcastReceiver::class.java)
             Log.d("bootreceived","bootreceived")
-            context.packageManager.setComponentEnabledSetting(
-                receiver,
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                PackageManager.DONT_KILL_APP
-            )
+//            context.packageManager.setComponentEnabledSetting(
+//                receiver,
+//                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+//                PackageManager.DONT_KILL_APP
+//            )
     }
 }

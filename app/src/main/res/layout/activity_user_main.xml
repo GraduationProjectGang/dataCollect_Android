@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".UserMainActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
+            style="@style/TextStyle"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="25dp"
+            android:lineSpacingExtra="9sp"
+            android:text="프로젝트 주제" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:layout_marginLeft="20dp"
+            android:textColor="#a8000000"
+            android:lineSpacingExtra="6sp"
+            android:gravity="center_horizontal"
+            android:text="활용 기술이 궁금하시다면 링크를 Click"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="5dp"
+                android:lineSpacingExtra="5sp"
+                android:paddingLeft="12dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="5dp"
+                android:textColor="#000000"
+                android:textSize="17dp"
+                android:text="개인 프라이버시를 보호하는\n협업 학습을 활용한\n스마트폰 사용 패턴 분석 및\n스트레스 예측" />
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="85dp"
+                android:layout_marginLeft="45dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="bottom|end"
+                android:src="@drawable/data" />
+        </LinearLayout>
+
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="wrap_content"
+            android:layout_height="2dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="25dp"
+            android:background="#2463b6" />
+        <TextView
+            android:id="@+id/tutorialAgain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:textColor="#a8000000"
+            android:lineSpacingExtra="6sp"
+            android:layout_marginTop="3dp"
+            android:layout_marginRight="35dp"
+            android:gravity="right"
+            tools:text="프로젝트 가이드 다시보기"
+            />
+    </LinearLayout>
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:lineSpacingExtra="6dp"
+        android:gravity="center_horizontal"
+        android:text="오늘 설문조사를\n
+(0/2)번 수행했습니다."
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:textSize="17sp"
+        android:textColor="#000000"
+        android:lineSpacingExtra="8sp"
+        android:gravity="center_horizontal"
+        android:text="스트레스 설문을 놓치셨나요?\n
+▽"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginVertical="34dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_radius"
+        android:text="스트레스 설문 시작하기"
+        style="@style/TextStyleBold"
+        android:textColor="@android:color/white"
+        android:paddingHorizontal="15dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Usercode: M9gIFKPrwnFSMkk9zMo"
+        android:layout_marginRight="20dp"
+        android:gravity="right"
+        />
+    <LinearLayout
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="2dp"
+        android:orientation="vertical"
+        android:background="#E3E1E1"
+        >
+        <TextView
+            style="@style/TextStyleNormal"
+            android:textSize="22dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="질문사항이 있으시다면?"
+            />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_gravity="bottom"
+                android:textSize="18dp"
+                style="@style/TextStyleNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="김지효\n010-3531-6592\nksh04023@gmail.com"
+                />
+            <ImageView
+                android:src="@drawable/konkuk"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="80dp"
+                android:layout_gravity="bottom"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

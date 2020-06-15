@@ -7,7 +7,15 @@
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".MainActivity">
-
+    <Button
+        android:id="@+id/usermainBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="userMain"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <Button
         android:id="@+id/tutorialBtn"
         android:layout_width="wrap_content"
@@ -45,7 +53,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-<LinearLayout
+
+    <Button
+        android:id="@+id/appusage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="appusage"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
     android:layout_marginTop="20dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
