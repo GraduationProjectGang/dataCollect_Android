@@ -12,9 +12,9 @@
 
     <TextView
         android:layout_marginTop="10dp"
-        android:textSize="22dp"
+        style="@style/TextStyle"
+        android:layout_marginLeft="0dp"
         android:text="사용정보 접근 권한 허용 Guide"
-        style="@style/TextStyleBold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />

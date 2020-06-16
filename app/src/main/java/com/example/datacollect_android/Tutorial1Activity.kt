@@ -42,6 +42,43 @@ class Tutorial1Activity : AppCompatActivity() {
         fbDatabase = FirebaseDatabase.getInstance()
         dbReference = fbDatabase.reference
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        val Listener = object: ValueEventListener {
+
+            override fun onCancelled(p0: DatabaseError) {
+                Log.e("T1_FBError", p0.toException().toString())
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                for (snap in p0.children) {
+                    Log.d("T1_Child", snap.getValue().toString())
+                }
+            }
+
+        }
+
+        fbDatabase.getReference().addValueEventListener(Listener)
+
+        var i = 0
+
+        //data class UserInfo( val userName: String? ="", val userPhone: String? = "", val userCode: Int = 0, val userGender: Int = 0, val userGrade: Int = 0) {
+
+
         nextButton1.setOnClickListener {
             val intent = Intent(this,Tutorial2Activity::class.java) //다음이어질 액티비티
             startActivity(intent)

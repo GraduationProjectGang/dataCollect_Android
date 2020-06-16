@@ -27,8 +27,26 @@ class UserMainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
         val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
         usercode.text = "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "0000")
+
+        button_survey.setOnClickListener {
+            val intent = Intent(this, StressCollectActivity::class.java)
+            startActivity(intent)
+        }
+
 
         //첫 실행이면 SignInActivity 실행
         var previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false)

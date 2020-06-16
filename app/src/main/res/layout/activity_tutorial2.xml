@@ -8,6 +8,13 @@
     android:orientation="vertical"
     android:id="@+id/tutorial2"
     tools:context=".Tutorial2Activity">
+    <ImageView
+        android:layout_marginTop="10dp"
+        android:src="@drawable/text_logo"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_gravity="right"
+        />
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="0dp"
@@ -24,9 +31,6 @@
             android:textStyle="bold"
             android:layout_width="382dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="15dp"
             android:lineSpacingExtra="9sp"
             android:text="프로젝트 주제" />
 
@@ -55,28 +59,32 @@
             android:layout_marginStart="25dp"
             android:layout_marginEnd="32dp"
             android:layout_marginRight="25dp"
-            android:background="#2463b6" />
+            android:background="@color/colorPrimaryDark" />
 
     </LinearLayout>
-
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:paddingHorizontal="7dp"
-        android:lineSpacingExtra="8sp"
-        android:scrollbars="vertical"
-        android:scrollbarSize="5dp"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:text="이 프로젝트는 대학생을 대상으로 한 연구입니다. 여러분의 스마트폰 사용 패턴과 스트레스 수준 설문조사 데이터를 2주 간 수집해 인공지능 모델을 구축하고, 추후에는 스마트폰 사용기록만으로 스트레스 수준을 예측하고자 합니다.\n\n
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:paddingHorizontal="10dp"
+            android:lineSpacingExtra="8sp"
+            android:scrollbars="vertical"
+            android:scrollbarSize="5dp"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:text="이 프로젝트는 대학생을 대상으로 한 연구입니다. 여러분의 스마트폰 사용 패턴과 스트레스 수준 설문조사 데이터를 2주 간 수집해 인공지능 모델을 구축하고, 추후에는 스마트폰 사용기록만으로 스트레스 수준을 예측하고자 합니다.\n\n
 
 스마트폰 사용 패턴 및 스트레스 척도 등의 private 한 데이터를 수집하는 과정에서 동형암호 기법을 사용하기 위한 방법론 연구를 중점으로 하고 있습니다.
 
 \n\n
 프로젝트 수행기간은 2020.03~2020.11 입니다."
-        android:textColor="#000000"
-        android:textSize="19dp"
-        />
+            android:textColor="#000000"
+            android:textSize="19dp"
+            />
+
+    </ScrollView>
 
 </LinearLayout>
 
