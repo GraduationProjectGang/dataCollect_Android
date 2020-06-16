@@ -27,6 +27,10 @@ class UserMainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        button_survey.setOnClickListener {
+            val intent = Intent(this, StressCollectActivity::class.java)
+            startActivity(intent)
+        }
 
         //첫 실행이면 SignInActivity 실행
         val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())

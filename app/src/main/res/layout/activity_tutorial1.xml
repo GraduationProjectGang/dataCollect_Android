@@ -8,6 +8,13 @@
     android:orientation="vertical"
     android:id="@+id/tutorial1"
     tools:context=".Tutorial1Activity">
+    <ImageView
+        android:layout_marginTop="10dp"
+        android:src="@drawable/text_logo"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_gravity="right"
+        />
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="0dp"
@@ -22,9 +29,6 @@
             style="@style/TextStyle"
             android:layout_width="382dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="15dp"
             android:lineSpacingExtra="9sp"
             android:text="프로젝트 주제" />
 
@@ -53,7 +57,7 @@
             android:layout_marginStart="25dp"
             android:layout_marginEnd="32dp"
             android:layout_marginRight="25dp"
-            android:background="#2463b6" />
+            android:background="@color/colorPrimaryDark" />
 
     </LinearLayout>
 
@@ -62,7 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:paddingHorizontal="7dp"
+        android:paddingHorizontal="10dp"
         android:lineSpacingExtra="8sp"
         android:scrollbars="vertical"
         android:scrollbarSize="5dp"
@@ -72,11 +76,6 @@
         android:textSize="19dp"
  />
 
-    <Button
-        android:id="@+id/testbutton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
 </LinearLayout>
 
 <LinearLayout

@@ -66,10 +66,7 @@ class Tutorial1Activity : AppCompatActivity() {
         var i = 0
 
         //data class UserInfo( val userName: String? ="", val userPhone: String? = "", val userCode: Int = 0, val userGender: Int = 0, val userGrade: Int = 0) {
-        testbutton.setOnClickListener {
-            val userInfo = UserInfo("abc", "123123", "123","123",3)
-            dbReference.child("user").push().setValue(userInfo)
-        }
+
 
         nextButton1.setOnClickListener {
             val intent = Intent(this,Tutorial2Activity::class.java) //다음이어질 액티비티
