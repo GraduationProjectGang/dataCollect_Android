@@ -21,22 +21,17 @@ class Tutorial1Activity : AppCompatActivity() {
 
     val MULTIPLE_REQUEST = 1234
 
+    lateinit var fbDatabase: FirebaseDatabase
+    lateinit var dbReference: DatabaseReference
+
     var permissionArr = arrayOf(
         android.Manifest.permission.PACKAGE_USAGE_STATS,
         android.Manifest.permission.ACCESS_NETWORK_STATE,
         android.Manifest.permission.ACCESS_COARSE_LOCATION,
         android.Manifest.permission.ACCESS_FINE_LOCATION,
         android.Manifest.permission.INTERNET,
-        android.Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-        android.Manifest.permission.READ_EXTERNAL_STORAGE,
-        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+        android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
     )
-
-
-    lateinit var fbDatabase: FirebaseDatabase
-    lateinit var dbReference: DatabaseReference
-
-    lateinit var userInfo: UserInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,30 +41,6 @@ class Tutorial1Activity : AppCompatActivity() {
 
         fbDatabase = FirebaseDatabase.getInstance()
         dbReference = fbDatabase.reference
-
-        val Listener = object: ValueEventListener {
-
-            override fun onCancelled(p0: DatabaseError) {
-                Log.e("T1_FBError", p0.toException().toString())
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                for (snap in p0.children) {
-                    Log.d("T1_Child", snap.getValue().toString())
-                }
-            }
-
-        }
-
-        fbDatabase.getReference().addValueEventListener(Listener)
-
-        var i = 0
-
-        //data class UserInfo( val userName: String? ="", val userPhone: String? = "", val userCode: Int = 0, val userGender: Int = 0, val userGrade: Int = 0) {
-        testbutton.setOnClickListener {
-            val userInfo = UserInfo("abc", "123123", "123","123",3)
-            dbReference.child("user").push().setValue(userInfo)
-        }
 
         nextButton1.setOnClickListener {
             val intent = Intent(this,Tutorial2Activity::class.java) //다음이어질 액티비티
@@ -91,8 +62,8 @@ class Tutorial1Activity : AppCompatActivity() {
             }
         })
 
-
     }
+
     open class OnSwipeTouchListener(ctx: Context) : View.OnTouchListener {
 
         private val gestureDetector: GestureDetector
@@ -158,14 +129,6 @@ class Tutorial1Activity : AppCompatActivity() {
 
         open fun onSwipeBottom() {}
     }
-    override fun onStart() {
-        super.onStart()
-//        val file = File("user.txt")
-//        if (file != null) {
-//            finish()
-//        }
-    }
-
 
     fun initPermission() {
         var rejectedPermissionList = ArrayList<String>()
@@ -189,5 +152,7 @@ class Tutorial1Activity : AppCompatActivity() {
             }
         }
     }
+
+
 
 }

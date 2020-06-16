@@ -118,13 +118,14 @@
         android:textColor="@android:color/white"
         android:paddingHorizontal="15dp"
         />
+
     <TextView
+        android:id="@+id/usercode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Usercode: M9gIFKPrwnFSMkk9zMo"
         android:layout_marginRight="20dp"
         android:gravity="right"
-        />
+        android:text="Usercode: M9gIFKPrwnFSMkk9zMo" />
     <LinearLayout
         android:padding="10dp"
         android:layout_width="match_parent"

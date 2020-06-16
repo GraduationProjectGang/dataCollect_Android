@@ -1,30 +1,25 @@
 package com.example.datacollect_android
 
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Environment
-import android.text.InputFilter
+import android.preference.PreferenceManager
+import android.text.TextUtils
 import android.util.Log
-import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.*
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_sign_in.*
-import java.io.File
-import java.io.FileWriter
 
 class SignInActivity : AppCompatActivity() {
 
     lateinit var fbDatabase: FirebaseDatabase
     lateinit var dbReference: DatabaseReference
+
+    lateinit var mAuth: FirebaseAuth
 
     lateinit var userInfo: UserInfo
 
@@ -46,8 +41,29 @@ class SignInActivity : AppCompatActivity() {
         val gradeAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, grade_array)
         user_grade.adapter = gradeAdapter
 
+        val listener = object: ChildEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                Log.w("LI", p0.toString())
+            }
 
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
 
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                Log.w("LI", p0.getValue(UserInfo::class.java).toString())
+                //Log.w("LI_p1", p1)
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
+
+        }
+
+        dbReference.child("user").addChildEventListener(listener)
 
         button_start.setOnClickListener {
             val nickname =  user_nickname.text.toString()
@@ -55,51 +71,36 @@ class SignInActivity : AppCompatActivity() {
             val gender = user_gender.selectedItem.toString()
             val grade = user_grade.selectedItem.toString().toInt()
 
-            val Listener = object: ChildEventListener {
+            if (TextUtils.isEmpty(nickname) || TextUtils.isEmpty(phonenum) || TextUtils.isEmpty(gender) || TextUtils.isEmpty(user_grade.selectedItem.toString())) {
+                Toast.makeText(this, "빠진 항목 없이 다 작성해주세요!", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                userInfo = UserInfo(nickname, phonenum, gender, grade)
+                dbReference.child("user").push().setValue(userInfo)
+                //Log.w("LI", userInfo.toString())
 
-                override fun onCancelled(p0: DatabaseError) {
-                    Log.e("LI_FBError", p0.toException().toString())
-                }
+                val prefs = PreferenceManager.getDefaultSharedPreferences(this.baseContext)
+                var edit = prefs.edit() as SharedPreferences.Editor
+                edit.putString(getString(R.string.pref_previously_logined), phonenum)
+                edit.commit()
 
-                override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-
-                }
-
-                override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                }
-
-                override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-
-                    val key = p0.getValue(UserInfo::class.java)
-                    Log.w("LI_KEY", key!!.uniqueKey)
-                    val file = File(Environment.getExternalStorageDirectory().absolutePath+"/datacollect.txt")
-                    var fw = FileWriter(file)
-                    fw.write(key!!.uniqueKey)
-                }
-
-                override fun onChildRemoved(p0: DataSnapshot) {
-                }
-
+                finish()
             }
 
-            dbReference.addChildEventListener(Listener)
-
-            userInfo = UserInfo(nickname, phonenum, "123", gender, grade)
-            dbReference.child("user").push().setValue(userInfo)
 
 
         }
-
 
     }
 
     override fun onStart() {
         super.onStart()
-        checkPreviousUser()
-    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this.baseContext)
+        if (prefs.getString(getString(R.string.pref_previously_logined), "0000") != "0000") {
+
+            finish()
+        }
 
     }
 
@@ -107,12 +108,5 @@ class SignInActivity : AppCompatActivity() {
         fbDatabase = FirebaseDatabase.getInstance()
         dbReference = fbDatabase.reference
     }
-
-    fun checkPreviousUser():Boolean {
-
-        return true
-    }
-
-
 
 }

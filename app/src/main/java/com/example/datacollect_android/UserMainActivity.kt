@@ -27,14 +27,15 @@ class UserMainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
+        usercode.text = "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "0000")
 
         //첫 실행이면 SignInActivity 실행
-        val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
         var previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false)
         if(!previouslyStarted)
         {
             var edit = prefs.edit() as SharedPreferences.Editor
-            val intent = Intent(this, Tutorial1Activity::class.java)
+            val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
         }
     }

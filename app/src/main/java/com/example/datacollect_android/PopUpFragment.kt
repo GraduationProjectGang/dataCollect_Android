@@ -21,6 +21,9 @@ import android.widget.Button
 import android.widget.LinearLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_pop_up.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -76,8 +79,8 @@ class PopUpFragment : DialogFragment() {
     }
     fun init(){
         Log.d("frag","init")
-
     }
+
     private fun initUsageStats() {
         val TAG = "usageStats"
         var granted = false
@@ -100,7 +103,6 @@ class PopUpFragment : DialogFragment() {
             activity!!.finish()
         }
 
-
         //tutorial 다 수행했다는 flag
         val prefs = PreferenceManager.getDefaultSharedPreferences(activity!!.getBaseContext())
         var previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false)
@@ -111,6 +113,7 @@ class PopUpFragment : DialogFragment() {
             edit.commit()
         }
     }
+
     companion object {
         /**
          * Use this factory method to create a new instance of
