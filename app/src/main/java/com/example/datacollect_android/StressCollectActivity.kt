@@ -42,6 +42,7 @@ class StressCollectActivity : AppCompatActivity() {
         }
 
         stressFinishBtn.setOnClickListener{
+
             if(input.contains(9)){
                 Toast.makeText(this,"모든 질문에 답해주세요",Toast.LENGTH_SHORT).show()
             }else{
@@ -66,10 +67,9 @@ class StressCollectActivity : AppCompatActivity() {
                 }
                 Log.d("surveyscore",score.toString())
                 Toast.makeText(this,"점수: ${score}",Toast.LENGTH_SHORT).show()
-                val fm: FragmentManager = supportFragmentManager
-                val dialogFragment = PopUpFragment()
-//                dialogFragment.show(fm, "fragment_dialog_test")
-                finish()
+
+
+
             }
         }
     }

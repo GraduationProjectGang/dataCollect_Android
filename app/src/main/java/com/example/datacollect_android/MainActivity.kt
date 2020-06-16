@@ -64,7 +64,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         init()
         initPermission()
-        initUsageStats()
 
 
     }
@@ -118,6 +117,11 @@ class MainActivity : AppCompatActivity() {
                 Log.d("firere", token)
             })
 
+
+        //usagedata
+        var result = getAppUsageStats(System.currentTimeMillis()-900000)
+        //15분전부터 현재까지 or FB에서 최근 데이터 저장한 시간 이후의 데이터
+        showAppUsageStats(result)
     }
 
     private fun initUsageStats() {
@@ -137,14 +141,11 @@ class MainActivity : AppCompatActivity() {
         if (granted == false)
         {
             // 권한이 없을 경우 권한 요구 페이지 이동
-            Toast.makeText(this,"저희 앱의 '사용 추적' 권한을 허용해 주세요",Toast.LENGTH_SHORT).show()
             val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
             startActivity(intent)
         }
 
-        var result = getAppUsageStats(System.currentTimeMillis()-900000)
-        //15분전부터 현재까지 or FB에서 최근 데이터 저장한 시간 이후의 데이터
-        showAppUsageStats(result)
+
     }
 
     fun initAlarm() {

@@ -34,8 +34,6 @@ class UserMainActivity : AppCompatActivity() {
         if(!previouslyStarted)
         {
             var edit = prefs.edit() as SharedPreferences.Editor
-            edit.putBoolean(getString(R.string.pref_previously_started),true)
-            edit.commit()
             val intent = Intent(this, Tutorial1Activity::class.java)
             startActivity(intent)
         }
