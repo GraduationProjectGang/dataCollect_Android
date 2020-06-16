@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">dataCollect_Android</string>
+    <string name="app_name">StreSSy</string>
     <string name="channel_name">스트레스 측정</string>
     <string name="channel_description">스트레스 측정</string>
     <string name="zero">0점</string>

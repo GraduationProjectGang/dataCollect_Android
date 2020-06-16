@@ -7,6 +7,7 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import kotlinx.android.synthetic.main.activity_stress_collect.*
 import java.time.LocalDateTime
 
@@ -50,7 +51,6 @@ class StressCollectActivity : AppCompatActivity() {
                     1-> input[1]=3
                     3-> input[1]=1
                     4-> input[1]=0
-
                 }
                 when(input[2]){
                     0-> input[2]=4
@@ -66,6 +66,9 @@ class StressCollectActivity : AppCompatActivity() {
                 }
                 Log.d("surveyscore",score.toString())
                 Toast.makeText(this,"점수: ${score}",Toast.LENGTH_SHORT).show()
+                val fm: FragmentManager = supportFragmentManager
+                val dialogFragment = PopUpFragment()
+//                dialogFragment.show(fm, "fragment_dialog_test")
                 finish()
             }
         }

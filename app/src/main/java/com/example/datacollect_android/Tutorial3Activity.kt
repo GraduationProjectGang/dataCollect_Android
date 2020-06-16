@@ -30,6 +30,7 @@ class Tutorial3Activity : AppCompatActivity() {
                 val intent = Intent(applicationContext,Tutorial2Activity::class.java) //다음이어질 액티비티
                 startActivity(intent)
                 overridePendingTransition(0, 0)
+
                 finish()
             }
 
