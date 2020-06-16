@@ -33,13 +33,16 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.Comparator
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
     val MULTIPLE_REQUEST = 1234
+    val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
 
     var permissionArr = arrayOf(
         android.Manifest.permission.PACKAGE_USAGE_STATS,
@@ -139,9 +142,9 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        var result = getAppUsageStats()
+        var result = getAppUsageStats(System.currentTimeMillis()-900000)
+        //15분전부터 현재까지 or FB에서 최근 데이터 저장한 시간 이후의 데이터
         showAppUsageStats(result)
-
     }
 
     fun initAlarm() {
@@ -217,18 +220,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-    fun getAppUsageStats(): MutableList<UsageStats> {
+    fun getAppUsageStats(time:Long): MutableList<UsageStats> {
         val cal = Calendar.getInstance()
-        cal.add(Calendar.MONTH, -1)    // 1
+        cal.add(Calendar.MINUTE, -1)//1분간의 stats 파악
+        Log.d("calcal",cal.toString())
 
         val usageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-
-        Log.d("appusing", usageStatsManager.toString())
-
         val queryUsageStats = usageStatsManager.queryUsageStats(
-            UsageStatsManager.INTERVAL_DAILY, cal.timeInMillis, System.currentTimeMillis()
+            UsageStatsManager.INTERVAL_BEST,time, System.currentTimeMillis()
         )
+
         Log.d("appusing", queryUsageStats.size.toString())
         return queryUsageStats
     }
@@ -238,28 +239,15 @@ class MainActivity : AppCompatActivity() {
         usageStats.sortWith(Comparator { right, left ->
             compareValues(left.lastTimeUsed, right.lastTimeUsed)
         })
+        var statsArr = ArrayList<UsageStat>()
 
         usageStats.forEach {
-            Log.d(
-                "appusing",
-                "packageName: ${it.packageName}, lastTimeUsed: ${Date(it.lastTimeUsed)}, " +
-                        "totalTimeInForeground: ${it.totalTimeInForeground}"
-            )
-        }
-    }
-
-
-    fun getMotionData() {
-        val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        val mSensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION)
-        val triggerEventListener = object : TriggerEventListener() {
-            override fun onTrigger(event: TriggerEvent?) {
-                Toast.makeText(applicationContext, "significant motion", Toast.LENGTH_SHORT).show()
+            if(it.lastTimeUsed>0){
+                statsArr.add(UsageStat(it.packageName,dateFormat.format(it.lastTimeUsed),it.totalTimeInForeground))
+                Log.d("appusing",statsArr.last().toString())
             }
         }
-        mSensor?.also { sensor ->
-            sensorManager.requestTriggerSensor(triggerEventListener, sensor)
-        }
+        Log.d("appusing","statsArrLen: ${statsArr.size}")
     }
 
     private fun initCollectingData() {//init Periodic work

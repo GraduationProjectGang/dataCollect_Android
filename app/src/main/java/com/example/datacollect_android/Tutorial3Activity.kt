@@ -1,7 +1,9 @@
 package com.example.datacollect_android
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_tutorial2.*
 import kotlinx.android.synthetic.main.activity_tutorial3.*
 
 class Tutorial3Activity : AppCompatActivity() {
@@ -10,8 +12,27 @@ class Tutorial3Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutorial3)
         nextButton3.setOnClickListener {
+            val intent = Intent(applicationContext,StressCollectActivity::class.java)
+            startActivity(intent)
             overridePendingTransition(0, 0)
             finish()
         }
+
+        tutorial3.setOnTouchListener(object:Tutorial1Activity.OnSwipeTouchListener(applicationContext){
+            override fun onSwipeLeft() {
+                val intent = Intent(applicationContext,StressCollectActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(0, 0)
+                finish()
+            }
+            override fun onSwipeRight() {
+                onBackPressed()
+                val intent = Intent(applicationContext,Tutorial2Activity::class.java) //다음이어질 액티비티
+                startActivity(intent)
+                overridePendingTransition(0, 0)
+                finish()
+            }
+
+        })
     }
 }
