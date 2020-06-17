@@ -111,18 +111,10 @@
             android:lineSpacingExtra="8sp"
             android:gravity="center_horizontal"
             android:text="스트레스 설문을 놓치셨나요?\n
-▽"
-
-
-
-
-
-
-
-
-
+▽"/>
 
     <Button
+        android:id="@+id/button_survey"
         android:layout_width="match_parent"
         android:layout_marginHorizontal="40dp"
         android:layout_marginVertical="34dp"
@@ -184,5 +176,6 @@
                 />
         </LinearLayout>
 
+    </LinearLayout>
     </LinearLayout>
 </LinearLayout>
