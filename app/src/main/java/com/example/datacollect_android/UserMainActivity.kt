@@ -7,7 +7,12 @@ import android.preference.PreferenceManager
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import androidx.appcompat.app.AppCompatActivity
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import kotlinx.android.synthetic.main.activity_user_main.*
+import java.util.concurrent.TimeUnit
 
 
 class UserMainActivity : AppCompatActivity() {
@@ -15,6 +20,26 @@ class UserMainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_main)
         init()
+    }
+
+    private fun createWorker() {//init Periodic work
+
+        val uniqueWorkName = "DataCollectWorker"
+
+        val constraints = Constraints.Builder()
+            .setRequiresCharging(false)
+            .build()
+
+        //15분 마다 반복
+        val collectRequest =
+            PeriodicWorkRequestBuilder<DataCollectWorker>(15, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .addTag("TAG")
+                .build()
+
+        //WorkManager에 enqueue
+        WorkManager.getInstance(applicationContext)
+            .enqueueUniquePeriodicWork(uniqueWorkName,ExistingPeriodicWorkPolicy.REPLACE, collectRequest)
     }
 
     fun init() {
@@ -26,6 +51,8 @@ class UserMainActivity : AppCompatActivity() {
             val intent = Intent(this, Tutorial1Activity::class.java)
             startActivity(intent)
         }
+
+
 
 
 
@@ -52,9 +79,11 @@ class UserMainActivity : AppCompatActivity() {
         var previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false)
         if(!previouslyStarted)
         {
+            createWorker()
             var edit = prefs.edit() as SharedPreferences.Editor
             val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
         }
+
     }
 }

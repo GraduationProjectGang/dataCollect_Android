@@ -11,30 +11,23 @@ import android.hardware.SensorManager
 import android.location.Location
 import android.os.Build
 import android.os.Looper
-import android.os.PowerManager
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.ContextCompat.getSystemServiceName
-import androidx.work.CoroutineWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.*
-import kotlinx.coroutines.*
-import java.lang.Thread.sleep
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.Comparator
 import kotlin.collections.ArrayList
 
-class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
-    : CoroutineWorker(appContext, workerParams), SensorEventListener {
-    //reference doc link
-    //https://developer.android.com/topic/libraries/architecture/workmanager/advanced/coroutineworker
-    //https://developer.android.com/training/location/request-updates
-
+class TestWorker(appContext: Context, workerParams: WorkerParameters)
+    : Worker(appContext, workerParams), SensorEventListener {
     val TAG_LOCATION = "LocationTest"
     val TAG_ROTATE = "rotateVectorTest"
     val TAG_COROUTINE = "coroutineWorkerTest"
@@ -43,7 +36,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
     //location variable
     private lateinit var locationRequest: LocationRequest
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationList:MutableList<Location>
+    private lateinit var locationList: MutableList<Location>
     private lateinit var locationCallback: LocationCallback
 
     //rotate vector variable
@@ -54,9 +47,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
     private val orientationAngles = FloatArray(3)
     private val mutableListOrientationAngles = mutableListOf<String>()
 
-    companion object var flag = false
-
-    private fun printCallStack(){
+    private fun printCallStack() {
         val sb = StringBuilder()
         sb.append("==================================\n  CALL STACK\n==================================\n");
 
@@ -76,33 +67,32 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun doWork(): Result = coroutineScope {
+    override fun doWork(): Result {
         val iterationRange = 60
 
         //debug
         printCallStack()
 
-        showAppUsageStats(getAppUsageStats(System.currentTimeMillis()-900000))
+        showAppUsageStats(getAppUsageStats(System.currentTimeMillis() - 900000))
 
         initLocationParms()
         startLocationUpdates()
 
-        val jobs =
-            async {
-                for (i in 1 .. iterationRange){
-                    //Repeat every 1s
-                    delay(1000L)
-                    startMeasureRotateVector()
-                    Log.d(TAG_COROUTINE, LocalDateTime.now().toString())
-                }
-                //stop location request when iteration was ended
-                stopLocationUpdates()
-            }
+        for (i in 1..iterationRange) {
+            //Repeat every 1s
+            Thread.sleep(1000L)
+            startMeasureRotateVector()
+            Log.d(TAG_COROUTINE, LocalDateTime.now().toString())
+        }
+        //stop location request when iteration was ended
+        stopLocationUpdates()
 
-        Result.success()
+
+        return Result.success()
     }
 
-    fun initLocationParms(){
+
+    private fun initLocationParms(){
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(applicationContext)
         locationList = mutableListOf()
@@ -218,5 +208,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
             System.arraycopy(event.values, 0, magnetometerReading, 0, magnetometerReading.size)
         }
     }
-
 }
+
+
+
