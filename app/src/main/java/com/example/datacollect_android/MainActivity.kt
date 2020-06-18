@@ -253,19 +253,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun initCollectingData() {//init Periodic work
 
-        val constraints = Constraints.Builder()
-            .setRequiresCharging(true)
-            .build()
-
-        //15분 마다 반복
-        val collectRequest =
-            PeriodicWorkRequestBuilder<DataCollectWorker>(15, TimeUnit.MINUTES)
-                .setConstraints(constraints)
-                .build()
-
-        //WorkManager에 enqueue
-        WorkManager.getInstance(applicationContext)
-            .enqueue(collectRequest)
+//        val constraints = Constraints.Builder()
+//            .setRequiresCharging(true)
+//            .build()
+//
+//        //15분 마다 반복
+//        val collectRequest =
+//            PeriodicWorkRequestBuilder<DataCollectWorker>(15, TimeUnit.MINUTES)
+//                .setConstraints(constraints)
+//                .build()
+//
+//        //WorkManager에 enqueue
+//        WorkManager.getInstance(applicationContext)
+//            .enqueue(collectRequest)
     }
 
     override fun onResume() {
