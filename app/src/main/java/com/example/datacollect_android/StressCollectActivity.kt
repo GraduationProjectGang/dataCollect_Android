@@ -8,22 +8,31 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_stress_collect.*
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 
 class StressCollectActivity : AppCompatActivity() {
     lateinit var time:LocalDateTime
+
+    lateinit var fbDatabase: FirebaseDatabase
+    lateinit var dbReference: DatabaseReference
+    val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stress_collect)
         time = LocalDateTime.now()
+
         init()
     }
 
     fun init(){
 
+        fbDatabase = FirebaseDatabase.getInstance()
+        dbReference = fbDatabase.reference
 
         var input = intArrayOf(9,9,9,9) //기본값 설정
         stressRadio1.setOnCheckedChangeListener { radioGroup, i ->
@@ -68,7 +77,24 @@ class StressCollectActivity : AppCompatActivity() {
                 Log.d("surveyscore",score.toString())
                 Toast.makeText(this,"점수: ${score}",Toast.LENGTH_SHORT).show()
 
+                val st = Stress_st(dateFormat.format(System.currentTimeMillis()), score.toString())
 
+                Log.w("SCA_userPhone", getString(R.string.pref_previously_logined))
+
+                val listener = object: ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                        Log.w("SCA_Error", p0.toString())
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        for (children in p0.children) {
+                            Log.w("SCA_Right", children.toString())
+                            dbReference.child("users").child("stress").push().setValue(st)
+                        }
+                    }
+                }
+
+                dbReference.child("users").orderByChild("userPhone").equalTo(getString(R.string.pref_previously_logined)).addValueEventListener(listener)
 
             }
         }

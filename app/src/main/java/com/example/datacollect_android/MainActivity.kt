@@ -92,8 +92,8 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         fbBtn.setOnClickListener {
-            val intent = Intent(this, FBTestActivity::class.java)
-            startActivity(intent)
+//            val intent = Intent(this, FBTestActivity::class.java)
+//            startActivity(intent)
         }
 
         initCollectingData()
@@ -266,6 +266,11 @@ class MainActivity : AppCompatActivity() {
         //WorkManager에 enqueue
         WorkManager.getInstance(applicationContext)
             .enqueue(collectRequest)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
     }
 
 }

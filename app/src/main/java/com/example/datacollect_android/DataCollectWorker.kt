@@ -94,6 +94,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
         Log.d(TAG_ROTATE, orientationAngles.contentToString())
 
     }
+
     private fun getLocation() {
         var ret = mutableMapOf<String, Double>()
         if (ActivityCompat.checkSelfPermission(applicationContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED

@@ -19,8 +19,6 @@ class SignInActivity : AppCompatActivity() {
     lateinit var fbDatabase: FirebaseDatabase
     lateinit var dbReference: DatabaseReference
 
-    lateinit var mAuth: FirebaseAuth
-
     lateinit var userInfo: UserInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
