@@ -74,12 +74,14 @@ class SignInActivity : AppCompatActivity() {
             }
             else {
                 userInfo = UserInfo(nickname, phonenum, gender, grade)
-                dbReference.child("user").push().setValue(userInfo)
-                //Log.w("LI", userInfo.toString())
+                //dbReference.child("user").push().setValue(userInfo)
+                val key = dbReference.child("user").push().key
+                Log.w("SI_", key)
+                dbReference.child("user").child(key!!).setValue(userInfo)
 
                 val prefs = PreferenceManager.getDefaultSharedPreferences(this.baseContext)
                 var edit = prefs.edit() as SharedPreferences.Editor
-                edit.putString(getString(R.string.pref_previously_logined), phonenum)
+                edit.putString(getString(R.string.pref_previously_logined), key)
                 edit.commit()
 
                 finish()
@@ -95,7 +97,7 @@ class SignInActivity : AppCompatActivity() {
         super.onStart()
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this.baseContext)
-        if (prefs.getString(getString(R.string.pref_previously_logined), "0000") != "0000") {
+        if (prefs.getString(getString(R.string.pref_previously_logined), "null") != "null") {
 
             finish()
         }

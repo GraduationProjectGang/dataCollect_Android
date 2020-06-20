@@ -39,7 +39,13 @@ class UserMainActivity : AppCompatActivity() {
 
         //WorkManager에 enqueue
         WorkManager.getInstance(applicationContext)
-            .enqueueUniquePeriodicWork(uniqueWorkName,ExistingPeriodicWorkPolicy.REPLACE, collectRequest)
+            .enqueueUniquePeriodicWork(uniqueWorkName, ExistingPeriodicWorkPolicy.REPLACE, collectRequest)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
+        usercode.text = "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "null")
     }
 
     fun init() {
@@ -52,22 +58,8 @@ class UserMainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
-        usercode.text = "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "0000")
+        usercode.text = "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "null")
 
         button_survey.setOnClickListener {
             val intent = Intent(this, StressCollectActivity::class.java)

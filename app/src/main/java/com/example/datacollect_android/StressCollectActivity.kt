@@ -1,7 +1,9 @@
 package com.example.datacollect_android
 
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.RadioButton
 import android.widget.Toast
@@ -19,6 +21,7 @@ class StressCollectActivity : AppCompatActivity() {
     lateinit var fbDatabase: FirebaseDatabase
     lateinit var dbReference: DatabaseReference
     val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
+    lateinit var prefs : SharedPreferences
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +36,10 @@ class StressCollectActivity : AppCompatActivity() {
 
         fbDatabase = FirebaseDatabase.getInstance()
         dbReference = fbDatabase.reference
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
+
+        val key = prefs.getString(getString(R.string.pref_previously_logined), "null")
 
         var input = intArrayOf(9,9,9,9) //기본값 설정
         stressRadio1.setOnCheckedChangeListener { radioGroup, i ->
@@ -79,8 +86,6 @@ class StressCollectActivity : AppCompatActivity() {
 
                 val st = Stress_st(dateFormat.format(System.currentTimeMillis()), score.toString())
 
-                Log.w("SCA_userPhone", getString(R.string.pref_previously_logined))
-
                 val listener = object: ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                         Log.w("SCA_Error", p0.toString())
@@ -88,13 +93,14 @@ class StressCollectActivity : AppCompatActivity() {
 
                     override fun onDataChange(p0: DataSnapshot) {
                         for (children in p0.children) {
-                            Log.w("SCA_Right", children.toString())
-                            dbReference.child("users").child("stress").push().setValue(st)
+                            Log.w("SCA_Right", children.key)
+                            dbReference.child("user").child(children.key!!).child("stress").push().setValue(st)
                         }
                     }
                 }
 
-                dbReference.child("users").orderByChild("userPhone").equalTo(getString(R.string.pref_previously_logined)).addValueEventListener(listener)
+                dbReference.child("user").orderByKey().equalTo(key).addListenerForSingleValueEvent(listener)
+
 
             }
         }

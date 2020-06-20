@@ -189,18 +189,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
 
     private fun getLocation() {
         var ret = mutableMapOf<String, Double>()
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 
     private fun startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(applicationContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
