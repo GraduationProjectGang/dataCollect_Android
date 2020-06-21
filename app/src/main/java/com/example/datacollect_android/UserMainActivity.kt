@@ -1,5 +1,7 @@
 package com.example.datacollect_android
 
+import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -45,7 +47,8 @@ class UserMainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
-        usercode.text = "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "null")
+        usercode.text =
+            "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "null")
     }
 
     fun init() {
@@ -58,8 +61,10 @@ class UserMainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
         val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
-        usercode.text = "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "null")
+        usercode.text =
+            "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "null")
 
         button_survey.setOnClickListener {
             val intent = Intent(this, StressCollectActivity::class.java)
@@ -69,13 +74,26 @@ class UserMainActivity : AppCompatActivity() {
 
         //첫 실행이면 SignInActivity 실행
         var previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false)
-        if(!previouslyStarted)
-        {
+        if (!previouslyStarted) {
             createWorker()
             var edit = prefs.edit() as SharedPreferences.Editor
             val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
         }
 
+    }
+
+    class App : Application() {
+        init {
+            instance = this
+        }
+
+        companion object {
+            private var instance: App? = null
+
+            fun context(): Context {
+                return instance!!.applicationContext
+            }
+        }
     }
 }

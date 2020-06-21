@@ -16,9 +16,11 @@
         <ImageView
             android:layout_marginTop="10dp"
             android:src="@drawable/text_logo"
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="40dp"
             android:layout_gravity="right"
+            android:paddingRight="3dp"
+            android:layout_marginRight="5dp"
             />
         <TextView
             style="@style/TextStyle"
@@ -137,7 +139,7 @@
         android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="1.5"
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="2dp"
@@ -164,7 +166,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="김지효\n010-3531-6592\nksh04023@gmail.com"
+                android:text="김지효\n+82-10-3531-6592\nksh04023@gmail.com"
+                android:autoLink="all|phone"
                 />
             <ImageView
                 android:src="@drawable/konkuk"

@@ -64,8 +64,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         init()
         initPermission()
-
-
     }
 
 
@@ -141,6 +139,7 @@ class MainActivity : AppCompatActivity() {
         if (granted == false)
         {
             // 권한이 없을 경우 권한 요구 페이지 이동
+            Toast.makeText(this,"권한 허용을 해주세요.",Toast.LENGTH_SHORT).show()
             val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
             startActivity(intent)
         }
@@ -197,6 +196,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
     fun initPermission() {
         var rejectedPermissionList = ArrayList<String>()

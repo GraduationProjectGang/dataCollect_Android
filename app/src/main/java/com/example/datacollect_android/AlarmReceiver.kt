@@ -1,11 +1,10 @@
 package com.example.datacollect_android
 
 import android.annotation.SuppressLint
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Context.*
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
@@ -14,12 +13,11 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.example.datacollect_android.R.string.channel_description as channel_description1
-import android.content.Context.MODE_PRIVATE
-import android.content.Context.NOTIFICATION_SERVICE
 import android.provider.Settings.System.getString
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
+import java.util.*
 
 class AlarmReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -53,5 +51,10 @@ class AlarmReceiver: BroadcastReceiver() {
             notify(200, builder.build())
             Log.d("alal","notified")
         }
+
     }
+
+
+
+
 }

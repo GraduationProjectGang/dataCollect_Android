@@ -1,5 +1,8 @@
 package com.example.datacollect_android
 
+import android.app.usage.UsageStats
+import android.app.usage.UsageStatsManager
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
@@ -14,6 +17,9 @@ import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_stress_collect.*
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
+import java.util.*
+import kotlin.Comparator
+import kotlin.collections.ArrayList
 
 class StressCollectActivity : AppCompatActivity() {
     lateinit var time:LocalDateTime
@@ -103,6 +109,42 @@ class StressCollectActivity : AppCompatActivity() {
 
 
             }
+
+            //추가
+            //TODO: getAppUsageStats에 인자로 지난 설문 시간 받아서 넣어줘야함
+            //getAppUsageStats()
+            //하고 같은 형식으로 저장
         }
+    }
+    fun getAppUsageStats(time:Long): MutableList<UsageStats> {
+        val cal = Calendar.getInstance()
+        cal.add(Calendar.MINUTE, -1)//1분간의 stats 파악
+        Log.d("calcal",cal.toString())
+
+        val usageStatsManager = applicationContext.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+        val queryUsageStats = usageStatsManager.queryUsageStats(
+            UsageStatsManager.INTERVAL_BEST,time, System.currentTimeMillis()
+        )
+
+        Log.d("appusing", queryUsageStats.size.toString())
+        return queryUsageStats
+    }
+
+    fun showAppUsageStats(usageStats: MutableList<UsageStats>) {
+
+        val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
+        Log.d("appusing", usageStats.size.toString())
+        usageStats.sortWith(Comparator { right, left ->
+            compareValues(left.lastTimeUsed, right.lastTimeUsed)
+        })
+        var statsArr = ArrayList<UsageStat>()
+
+        usageStats.forEach {
+            if(it.lastTimeUsed>0){
+                statsArr.add(UsageStat(it.packageName,dateFormat.format(it.lastTimeUsed),it.totalTimeInForeground))
+                Log.d("appusing",statsArr.last().toString())
+            }
+        }
+        Log.d("appusing","statsArrLen: ${statsArr.size}")
     }
 }

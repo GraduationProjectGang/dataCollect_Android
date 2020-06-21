@@ -1,31 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp"
-    tools:context=".SignInActivity">
-    <TextView
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".SignInActivity"
+    android:id="@+id/sv_root">
+    <LinearLayout
+        android:layout_margin="10dp"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_marginTop="7dp"
+            android:src="@drawable/text_logo"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_gravity="right"
+            />
+    <LinearLayout
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:text="회원정보 입력"
+            />
+        <TextView
         android:layout_marginTop="30dp"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:textSize="20dp"
-        android:text="기본정보를 입력해주세요. 연구 이외의 목적으로는 사용되지 않습니다.\n\n
-    - 별명(익명성을 위함)\n
-    - 학년\n
-    - 성별\n
-    - 휴대폰번호"
+        android:text="기본정보를 입력해주세요. 연구 이외의 목적으로는 사용되지 않습니다."
         />
+        <TextView
+            android:lineSpacingExtra="2dp"
+            android:layout_marginTop="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="17dp"
+            android:text="
+        - 별명 (익명성을 위함)\n
+        - 학년\n
+        - 성별\n
+        - 휴대폰번호"
+            />
     <LinearLayout
+        android:layout_marginTop="10dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         >
         <LinearLayout
             android:layout_margin="3dp"
@@ -49,7 +79,7 @@
                 android:id="@+id/user_nickname"
                 style="@style/TextStyleBold"
                 android:layout_width="0dp"
-                android:layout_weight="1.3"
+                android:layout_weight="1.5"
                 android:layout_height="wrap_content"
                 />
         </LinearLayout>
@@ -75,7 +105,7 @@
                 android:id="@+id/user_gender"
                 style="@style/TextStyleBold"
                 android:layout_width="0dp"
-                android:layout_weight="1.3"
+                android:layout_weight="1.5"
                 android:layout_height="match_parent"
                 android:spinnerMode="dropdown"
                 />
@@ -102,7 +132,7 @@
                 android:id="@+id/user_grade"
                 style="@style/TextStyleBold"
                 android:layout_width="0dp"
-                android:layout_weight="1.3"
+                android:layout_weight="1.5"
                 android:layout_height="match_parent"
                 android:spinnerMode="dropdown"
                 />
@@ -131,83 +161,93 @@
                 style="@style/TextStyleBold"
                 android:textStyle="normal"
                 android:layout_width="0dp"
-                android:layout_weight="1.3"
+                android:layout_weight="1.5"
                 android:layout_height="wrap_content"
                 android:hint="ex) 01012345678"
                 />
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="개인정보 수집에 동의합니다."
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
-
-        <CheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:checkMark="@color/colorAccent" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="24dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/nextButton3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:layout_width="13dp"
-            android:layout_height="13dp"
-            android:layout_marginHorizontal="3dp"
-            android:src="@drawable/empty_swipe" />
-
-        <ImageView
-            android:layout_width="13dp"
-            android:layout_height="13dp"
-            android:layout_marginHorizontal="3dp"
-            android:src="@drawable/empty_swipe" />
-
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="13dp"
-            android:layout_height="13dp"
-            android:layout_marginHorizontal="3dp"
-            android:src="@drawable/empty_swipe" />
-
-        <ImageView
-            android:layout_width="13dp"
-            android:layout_height="13dp"
-            android:layout_marginHorizontal="3dp"
-            android:src="@drawable/full_swipe" />
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/button_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="70dp"
-        android:layout_marginTop="20dp"
-        android:text="시작하기"
-        android:background="@drawable/button_radius"
-        style="@style/TextStyleNormal"
-        android:textColor="@android:color/white"
-        android:layout_gravity="center"
-        />
 
 </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="개인정보 수집 및 활용에 동의합니다."
+                android:layout_gravity="center_vertical"
+                android:textColor="@android:color/black"
+                android:textSize="20dp" />
+
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:checkMark="@color/colorAccent" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="11dp"
+                android:layout_height="11dp"
+                android:layout_marginHorizontal="3dp"
+                android:src="@drawable/full_swipe" />
+
+            <ImageView
+                android:layout_width="11dp"
+                android:layout_height="11dp"
+                android:layout_marginHorizontal="3dp"
+                android:src="@drawable/empty_swipe" />
+
+            <ImageView
+                android:layout_width="11dp"
+                android:layout_height="11dp"
+                android:layout_marginHorizontal="3dp"
+                android:src="@drawable/empty_swipe" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="11dp"
+                android:layout_height="11dp"
+                android:layout_marginHorizontal="3dp"
+                android:layout_weight="1"
+                android:src="@drawable/empty_swipe" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_start"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:background="@drawable/button_radius"
+            android:layout_marginBottom="10dp"
+            android:text="다음"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:textSize="18dp" />
+        <View
+            android:layout_marginBottom="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+    </LinearLayout>
+</LinearLayout>
+</ScrollView>
