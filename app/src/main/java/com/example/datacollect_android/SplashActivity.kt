@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 
 class SplashActivity : AppCompatActivity() {
-    private val SPLASH_TIME_OUT:Long = 500 // 일단짧게
+    private val SPLASH_TIME_OUT:Long = 1000 // 일단짧게
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

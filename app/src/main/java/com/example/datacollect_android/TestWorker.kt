@@ -17,6 +17,8 @@ import androidx.core.app.ActivityCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.*
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -47,6 +49,10 @@ class TestWorker(appContext: Context, workerParams: WorkerParameters)
     private val orientationAngles = FloatArray(3)
     private val mutableListOrientationAngles = mutableListOf<String>()
 
+    //firebase reference
+    lateinit var dbReference: DatabaseReference
+    lateinit var fbDatabase: FirebaseDatabase
+
     private fun printCallStack() {
         val sb = StringBuilder()
         sb.append("==================================\n  CALL STACK\n==================================\n");
@@ -70,6 +76,9 @@ class TestWorker(appContext: Context, workerParams: WorkerParameters)
     override fun doWork(): Result {
         val iterationRange = 60
 
+        fbDatabase = FirebaseDatabase.getInstance()
+        dbReference = fbDatabase.reference
+
         //debug
         printCallStack()
 
@@ -77,6 +86,8 @@ class TestWorker(appContext: Context, workerParams: WorkerParameters)
 
         initLocationParms()
         startLocationUpdates()
+
+
 
         for (i in 1..iterationRange) {
             //Repeat every 1s
@@ -86,6 +97,8 @@ class TestWorker(appContext: Context, workerParams: WorkerParameters)
         }
         //stop location request when iteration was ended
         stopLocationUpdates()
+
+
 
 
         return Result.success()

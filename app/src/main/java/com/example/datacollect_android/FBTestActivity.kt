@@ -9,8 +9,8 @@ import kotlinx.android.synthetic.main.activity_fbtest.*
 
 class FBTestActivity : AppCompatActivity() {
 
-    lateinit var fbDatabase: FirebaseDatabase
     lateinit var dbReference: DatabaseReference
+    lateinit var fbDatabase: FirebaseDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
