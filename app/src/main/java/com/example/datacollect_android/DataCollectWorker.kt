@@ -12,6 +12,7 @@ import android.location.Location
 import android.os.Build
 import android.os.Looper
 import android.os.PowerManager
+import android.preference.PreferenceManager
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -21,6 +22,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.*
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.*
 import java.lang.Thread.sleep
 import java.text.SimpleDateFormat
@@ -39,6 +42,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
     val TAG_ROTATE = "rotateVectorTest"
     val TAG_COROUTINE = "coroutineWorkerTest"
     val TAG_USAGE = "usageTest"
+    val userKey = u_key
 
     //location variable
     private lateinit var locationRequest: LocationRequest
@@ -53,6 +57,9 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
     private val rotationMatrix = FloatArray(9)
     private val orientationAngles = FloatArray(3)
     private val mutableListOrientationAngles = mutableListOf<String>()
+
+    lateinit var fbDatabase: FirebaseDatabase
+    lateinit var dbReference: DatabaseReference
 
     companion object var flag = false
 
@@ -82,7 +89,9 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
         //debug
         printCallStack()
 
-        showAppUsageStats(getAppUsageStats(System.currentTimeMillis()-900000))
+
+        var stats = ArrayList<UsageStat>()
+        stats = showAppUsageStats(getAppUsageStats(System.currentTimeMillis()-900000))
 
         initLocationParms()
         startLocationUpdates()
@@ -98,6 +107,14 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
                 //stop location request when iteration was ended
                 stopLocationUpdates()
             }
+
+        var usage = UsageStatsCollection(ArrayList(), "coroutine", System.currentTimeMillis().toString())
+        usage.statsList = stats
+
+        fbDatabase = FirebaseDatabase.getInstance()
+        dbReference = fbDatabase.reference
+        dbReference.child("user").child(userKey).child("rotatevector").push().setValue(mutableListOrientationAngles)
+        dbReference.child("user").child(userKey).child("usagestats").push().setValue(usage)
 
         Result.success()
     }
@@ -136,7 +153,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
         return queryUsageStats
     }
 
-    fun showAppUsageStats(usageStats: MutableList<UsageStats>) {
+    fun showAppUsageStats(usageStats: MutableList<UsageStats>) : ArrayList<UsageStat> {
 
         val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
         Log.d("appusing", usageStats.size.toString())
@@ -152,6 +169,8 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
             }
         }
         Log.d("appusing","statsArrLen: ${statsArr.size}")
+
+        return statsArr
     }
 
     private fun startMeasureRotateVector(){

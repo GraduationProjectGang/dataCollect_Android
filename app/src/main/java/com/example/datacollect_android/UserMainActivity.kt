@@ -16,6 +16,8 @@ import androidx.work.WorkManager
 import kotlinx.android.synthetic.main.activity_user_main.*
 import java.util.concurrent.TimeUnit
 
+lateinit var u_key: String
+
 
 class UserMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,12 +48,20 @@ class UserMainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this.baseContext)
+        if (!prefs.getBoolean(getString(R.string.worker_work), false)) {
+            createWorker()
+            var edit = prefs.edit() as SharedPreferences.Editor
+            edit.putBoolean(getString(R.string.worker_work), true)
+            edit.commit()
+        }
         usercode.text =
             "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "null")
+        u_key =  prefs.getString(getString(R.string.pref_previously_logined), "null")!!
     }
 
     fun init() {
+
         val mystring = "프로젝트 가이드 다시보기"
         val content = SpannableString(mystring)
         content.setSpan(UnderlineSpan(), 0, mystring.length, 0)
@@ -75,8 +85,6 @@ class UserMainActivity : AppCompatActivity() {
         //첫 실행이면 SignInActivity 실행
         var previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false)
         if (!previouslyStarted) {
-            createWorker()
-            var edit = prefs.edit() as SharedPreferences.Editor
             val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
         }

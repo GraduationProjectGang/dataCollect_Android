@@ -47,6 +47,8 @@ class StressCollectActivity : AppCompatActivity() {
 
         val key = prefs.getString(getString(R.string.pref_previously_logined), "null")
 
+        Log.w("SCA_init", key)
+
         var input = intArrayOf(9,9,9,9) //기본값 설정
         stressRadio1.setOnCheckedChangeListener { radioGroup, i ->
             //radiobutton 값 받아서 input에 저장
@@ -68,7 +70,6 @@ class StressCollectActivity : AppCompatActivity() {
             if(input.contains(9)){
                 Toast.makeText(this,"모든 질문에 답해주세요",Toast.LENGTH_SHORT).show()
             }else{
-                //TODO: Add data to db
                 when(input[1]){
                     0-> input[1]=4
                     1-> input[1]=3
@@ -90,9 +91,33 @@ class StressCollectActivity : AppCompatActivity() {
                 Log.d("surveyscore",score.toString())
                 Toast.makeText(this,"점수: ${score}",Toast.LENGTH_SHORT).show()
 
-                val st = Stress_st(dateFormat.format(System.currentTimeMillis()), score.toString())
+                var stCount = prefs.getInt(getString(R.string.stress_collect_count), 0)
 
-                val listener = object: ValueEventListener {
+                val curTime = System.currentTimeMillis()
+
+                if (stCount == 0) {
+                    showAppUsageStats(getAppUsageStats(curTime))
+                }
+                else {
+                    dbReference.child("user").child(key!!).child("stress").orderByChild("index")
+                        .equalTo(stCount.toString()).addListenerForSingleValueEvent(object: ValueEventListener{
+                            override fun onCancelled(p0: DatabaseError) {
+                                Log.w("SCA_Error", p0.toString())
+                            }
+
+                            override fun onDataChange(p0: DataSnapshot) {
+                                for (children in p0.children) {
+                                    Log.w("SCA_Usage", children.value.toString())
+                                    val previousTime = children.getValue(Stress_st::class.java)
+                                    Log.w("SCA_Stress", previousTime.toString())
+                                    showAppUsageStats(getAppUsageStats(curTime - previousTime!!.timestamp.toLong()))
+                                }
+                            }
+
+                        })
+                }
+
+                dbReference.child("user").orderByKey().equalTo(key).addListenerForSingleValueEvent(object: ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                         Log.w("SCA_Error", p0.toString())
                     }
@@ -100,22 +125,23 @@ class StressCollectActivity : AppCompatActivity() {
                     override fun onDataChange(p0: DataSnapshot) {
                         for (children in p0.children) {
                             Log.w("SCA_Right", children.key)
+                            val st = Stress_st(curTime.toString(), score.toString(), stCount.toString())
                             dbReference.child("user").child(children.key!!).child("stress").push().setValue(st)
                         }
                     }
-                }
+                })
 
-                dbReference.child("user").orderByKey().equalTo(key).addListenerForSingleValueEvent(listener)
-
-
+                stCount++
+                val edit = prefs.edit() as SharedPreferences.Editor
+                edit.putInt(getString(R.string.stress_collect_count), stCount)
+                edit.commit()
             }
 
-            //추가
-            //TODO: getAppUsageStats에 인자로 지난 설문 시간 받아서 넣어줘야함
-            //getAppUsageStats()
-            //하고 같은 형식으로 저장
+            finish()
+
         }
     }
+
     fun getAppUsageStats(time:Long): MutableList<UsageStats> {
         val cal = Calendar.getInstance()
         cal.add(Calendar.MINUTE, -1)//1분간의 stats 파악
@@ -146,5 +172,10 @@ class StressCollectActivity : AppCompatActivity() {
             }
         }
         Log.d("appusing","statsArrLen: ${statsArr.size}")
+
+        var usage = UsageStatsCollection(ArrayList(), prefs.getInt(getString(R.string.stress_collect_count), 0)!!.toString(), System.currentTimeMillis().toString())
+        usage.statsList = statsArr
+
+        dbReference.child("user").child(prefs.getString(getString(R.string.pref_previously_logined), "null")!!).child("usagestats").push().setValue(usage)
     }
 }
