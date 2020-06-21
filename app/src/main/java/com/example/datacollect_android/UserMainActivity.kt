@@ -1,11 +1,9 @@
 package com.example.datacollect_android
 
 import android.app.Application
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.SpannableString
@@ -43,7 +41,14 @@ class UserMainActivity : AppCompatActivity() {
 
         //WorkManager에 enqueue
         WorkManager.getInstance(applicationContext)
-            .enqueueUniquePeriodicWork(uniqueWorkName,ExistingPeriodicWorkPolicy.REPLACE, collectRequest)
+            .enqueueUniquePeriodicWork(uniqueWorkName, ExistingPeriodicWorkPolicy.REPLACE, collectRequest)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
+        usercode.text =
+            "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "null")
     }
 
     fun init() {
@@ -58,7 +63,8 @@ class UserMainActivity : AppCompatActivity() {
 
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
-        usercode.text = "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "0000")
+        usercode.text =
+            "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "null")
 
         button_survey.setOnClickListener {
             val intent = Intent(this, StressCollectActivity::class.java)
@@ -68,24 +74,15 @@ class UserMainActivity : AppCompatActivity() {
 
         //첫 실행이면 SignInActivity 실행
         var previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false)
-        if(!previouslyStarted)
-        {
+        if (!previouslyStarted) {
             createWorker()
             var edit = prefs.edit() as SharedPreferences.Editor
             val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
         }
 
-        val pm: PackageManager = this.packageManager
-        val receiver = ComponentName(this, BootReceiver::class.java)
-
-        pm.setComponentEnabledSetting(
-            receiver,
-            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-            PackageManager.DONT_KILL_APP
-        )
-
     }
+
     class App : Application() {
         init {
             instance = this
@@ -94,7 +91,7 @@ class UserMainActivity : AppCompatActivity() {
         companion object {
             private var instance: App? = null
 
-            fun context() : Context {
+            fun context(): Context {
                 return instance!!.applicationContext
             }
         }
