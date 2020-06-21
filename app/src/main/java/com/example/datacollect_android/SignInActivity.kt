@@ -15,18 +15,23 @@ import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
 
 class SignInActivity : AppCompatActivity() {
-
     lateinit var fbDatabase: FirebaseDatabase
     lateinit var dbReference: DatabaseReference
-
     lateinit var userInfo: UserInfo
-
+    lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_sign_in)
         super.onCreate(savedInstanceState)
-        //initPermission()
-        initFirebase()
 
+        //keyboard쓸 때 올라감
+        keyboardVisibilityUtils = KeyboardVisibilityUtils(window,
+            onShowKeyboard = { keyboardHeight ->
+                sv_root.run {
+                    smoothScrollTo(scrollX, scrollY + keyboardHeight)
+                }
+            })
+
+        initFirebase()
         init()
     }
 
@@ -71,6 +76,13 @@ class SignInActivity : AppCompatActivity() {
 
             if (TextUtils.isEmpty(nickname) || TextUtils.isEmpty(phonenum) || TextUtils.isEmpty(gender) || TextUtils.isEmpty(user_grade.selectedItem.toString())) {
                 Toast.makeText(this, "빠진 항목 없이 다 작성해주세요!", Toast.LENGTH_SHORT).show()
+            }else if (!TextUtils.isDigitsOnly(phonenum)){
+                Toast.makeText(this, "휴대폰 번호를 형식에 맞게 입력해주세요!", Toast.LENGTH_SHORT).show()
+            }else if (!(phonenum.length == 11)){
+                Toast.makeText(this, "휴대폰 번호를 형식에 맞게 입력해주세요!", Toast.LENGTH_SHORT).show()
+            }else if(!checkbox.isChecked){
+                Toast.makeText(this, "개인정보활용에 동의해 주세요", Toast.LENGTH_SHORT).show()
+
             }
             else {
                 userInfo = UserInfo(nickname, phonenum, gender, grade)
@@ -84,13 +96,12 @@ class SignInActivity : AppCompatActivity() {
                 edit.putString(getString(R.string.pref_previously_logined), key)
                 edit.commit()
 
+                val intent = Intent(applicationContext,Tutorial1Activity::class.java) //다음이어질 액티비티
+                startActivity(intent)
+                Toast.makeText(this,"감사합니다! 튜토리얼을 시작합니다.",Toast.LENGTH_SHORT).show()
                 finish()
             }
-
-
-
         }
-
     }
 
     override fun onStart() {

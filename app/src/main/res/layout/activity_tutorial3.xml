@@ -12,9 +12,11 @@
     <ImageView
         android:layout_marginTop="10dp"
         android:src="@drawable/text_logo"
-        android:layout_width="100dp"
+        android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_gravity="right"
+        android:paddingRight="3dp"
+        android:layout_marginRight="5dp"
         />
 <LinearLayout
     android:layout_width="match_parent"
