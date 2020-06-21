@@ -1,7 +1,11 @@
 package com.example.datacollect_android
 
+import android.app.Application
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.SpannableString
@@ -53,19 +57,6 @@ class UserMainActivity : AppCompatActivity() {
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
         usercode.text = "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "0000")
 
@@ -85,5 +76,27 @@ class UserMainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val pm: PackageManager = this.packageManager
+        val receiver = ComponentName(this, BootReceiver::class.java)
+
+        pm.setComponentEnabledSetting(
+            receiver,
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+            PackageManager.DONT_KILL_APP
+        )
+
+    }
+    class App : Application() {
+        init {
+            instance = this
+        }
+
+        companion object {
+            private var instance: App? = null
+
+            fun context() : Context {
+                return instance!!.applicationContext
+            }
+        }
     }
 }
