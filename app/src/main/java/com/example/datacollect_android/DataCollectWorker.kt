@@ -3,6 +3,7 @@ package com.example.datacollect_android
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -13,6 +14,7 @@ import android.os.Build
 import android.os.Looper
 import android.os.PowerManager
 import android.preference.PreferenceManager
+import android.provider.Settings.System.getString
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -113,11 +115,15 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
         var usage = UsageStatsCollection(ArrayList(), "coroutine", mTimestamp.toString())
         usage.statsList = stats
 
-        fbDatabase = FirebaseDatabase.getInstance()
-        dbReference = fbDatabase.reference
-        dbReference.child("user").child(userKey).child("rotatevector").push().setValue(mutableListOrientationAngles)
-        dbReference.child("user").child(userKey).child("usagestatsCoroutine").push().setValue(usage)
 
+        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        if (prefs.getBoolean(applicationContext.getString(R.string.worker_work), false)) {
+            fbDatabase = FirebaseDatabase.getInstance()
+            dbReference = fbDatabase.reference
+            dbReference.child("user").child(userKey).child("rotatevector").push().setValue(mutableListOrientationAngles)
+            dbReference.child("user").child(userKey).child("usagestatsCoroutine").push().setValue(usage)
+
+        }
         Result.success()
     }
 
@@ -165,7 +171,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
         var statsArr = ArrayList<UsageStat>()
 
         usageStats.forEach {
-            if(it.totalTimeInForeground>0){
+            if(it.totalTimeInForeground>0 && it.lastTimeUsed>mTimestamp-900000){
                 statsArr.add(UsageStat(it.packageName,dateFormat.format(it.lastTimeUsed),it.totalTimeInForeground))
                 Log.d("appusing",statsArr.last().toString())
             }

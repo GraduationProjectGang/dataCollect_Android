@@ -148,9 +148,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun initAlarm() {
-
-        setAlarmAt(14)
-        setAlarmAt(22)
+//
+//        setAlarmAt(14)
+//        setAlarmAt(22)
         // Set the alarm to start at approximately 2p.m. and 10p.m.
 
         val pm: PackageManager = this.packageManager
@@ -164,38 +164,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-    fun setAlarmAt(time: Int) {
-        val calendar: Calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, time)
-        }
-
-        val alarmIntent = Intent(this, AlarmReceiver::class.java)
-        val pendingIntent =
-            PendingIntent.getBroadcast(this, time, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        if (alarmManager != null) {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                Log.d("alal","dd")
-//
-
-            //test
-//            alarmManager.setAndAllowWhileIdle(
-//                    AlarmManager.RTC_WAKEUP,
-//                    System.currentTimeMillis()+6000,
-//                    pendingIntent
-//                )
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager.setAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    pendingIntent
-                )
-            }
-        }
-    }
 
 
 

@@ -1,9 +1,14 @@
 package com.example.datacollect_android
 
+import android.app.AlarmManager
 import android.app.Application
+import android.app.PendingIntent
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.SpannableString
@@ -14,6 +19,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import kotlinx.android.synthetic.main.activity_user_main.*
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 lateinit var u_key: String
@@ -85,7 +91,54 @@ class UserMainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        setAlarmAt(10)
+        setAlarmAt(14)
+        setAlarmAt(18)
+        setAlarmAt(22)
+        // Set the alarm to start at approximately 2p.m. and 10p.m.
+
+        val pm: PackageManager = this.packageManager
+        val receiver = ComponentName(this, BootReceiver::class.java)
+
+        pm.setComponentEnabledSetting(
+            receiver,
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+            PackageManager.DONT_KILL_APP
+        );
     }
+
+    fun setAlarmAt(time: Int) {
+        val calendar: Calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.HOUR_OF_DAY, time)
+        }
+
+        val alarmIntent = Intent(this, AlarmReceiver::class.java)
+        val pendingIntent =
+            PendingIntent.getBroadcast(this, time, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        if (alarmManager != null) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                Log.d("alal","dd")
+//
+
+            //test
+//            alarmManager.setAndAllowWhileIdle(
+//                    AlarmManager.RTC_WAKEUP,
+//                    System.currentTimeMillis()+6000,
+//                    pendingIntent
+//                )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    pendingIntent
+                )
+            }
+        }
+    }
+
 
     class App : Application() {
         init {
