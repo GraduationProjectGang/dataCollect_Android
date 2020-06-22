@@ -85,7 +85,7 @@ class SignInActivity : AppCompatActivity() {
 
             }
             else {
-                userInfo = UserInfo(nickname, phonenum, gender, grade)
+                userInfo = UserInfo(nickname, phonenum, gender, grade, System.currentTimeMillis())//가입시간 추가
                 //dbReference.child("user").push().setValue(userInfo)
                 val key = dbReference.child("user").push().key
                 Log.w("SI_", key)

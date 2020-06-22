@@ -61,7 +61,6 @@ class UserMainActivity : AppCompatActivity() {
     }
 
     fun init() {
-
         val mystring = "프로젝트 가이드 다시보기"
         val content = SpannableString(mystring)
         content.setSpan(UnderlineSpan(), 0, mystring.length, 0)
@@ -70,8 +69,6 @@ class UserMainActivity : AppCompatActivity() {
             val intent = Intent(this, Tutorial1Activity::class.java)
             startActivity(intent)
         }
-
-
         val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
         usercode.text =
             "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "null")
@@ -80,7 +77,6 @@ class UserMainActivity : AppCompatActivity() {
             val intent = Intent(this, StressCollectActivity::class.java)
             startActivity(intent)
         }
-
 
         //첫 실행이면 SignInActivity 실행
         var previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false)

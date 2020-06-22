@@ -60,6 +60,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
 
     lateinit var fbDatabase: FirebaseDatabase
     lateinit var dbReference: DatabaseReference
+    var mTimestamp:Long = 0
 
     companion object var flag = false
 
@@ -84,6 +85,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
 
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun doWork(): Result = coroutineScope {
+        mTimestamp = System.currentTimeMillis()//공통으로 쓰일 timestamp
         val iterationRange = 60
 
         //debug
@@ -91,7 +93,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
 
 
         var stats = ArrayList<UsageStat>()
-        stats = showAppUsageStats(getAppUsageStats(System.currentTimeMillis()-900000))
+        stats = showAppUsageStats(getAppUsageStats(mTimestamp-900000))
 
         initLocationParms()
         startLocationUpdates()
@@ -108,13 +110,13 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
                 stopLocationUpdates()
             }
 
-        var usage = UsageStatsCollection(ArrayList(), "coroutine", System.currentTimeMillis().toString())
+        var usage = UsageStatsCollection(ArrayList(), "coroutine", mTimestamp.toString())
         usage.statsList = stats
 
         fbDatabase = FirebaseDatabase.getInstance()
         dbReference = fbDatabase.reference
         dbReference.child("user").child(userKey).child("rotatevector").push().setValue(mutableListOrientationAngles)
-        dbReference.child("user").child(userKey).child("usagestats").push().setValue(usage)
+        dbReference.child("user").child(userKey).child("usagestatsCoroutine").push().setValue(usage)
 
         Result.success()
     }
@@ -139,6 +141,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
             }
         }
     }
+
     fun getAppUsageStats(time:Long): MutableList<UsageStats> {
         val cal = Calendar.getInstance()
         cal.add(Calendar.MINUTE, -1)//1분간의 stats 파악
@@ -146,9 +149,8 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
 
         val usageStatsManager = applicationContext.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
         val queryUsageStats = usageStatsManager.queryUsageStats(
-            UsageStatsManager.INTERVAL_BEST,time, System.currentTimeMillis()
+            UsageStatsManager.INTERVAL_BEST,time, mTimestamp
         )
-
         Log.d("appusing", queryUsageStats.size.toString())
         return queryUsageStats
     }
@@ -163,7 +165,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
         var statsArr = ArrayList<UsageStat>()
 
         usageStats.forEach {
-            if(it.lastTimeUsed>0){
+            if(it.totalTimeInForeground>0){
                 statsArr.add(UsageStat(it.packageName,dateFormat.format(it.lastTimeUsed),it.totalTimeInForeground))
                 Log.d("appusing",statsArr.last().toString())
             }

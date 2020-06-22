@@ -33,7 +33,6 @@ class AlarmReceiver: BroadcastReceiver() {
             val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(mChannel)
         }
-
         val intent = Intent(context, StressCollectActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         val pendingIntent = PendingIntent.getActivity(context, 0,
@@ -51,10 +50,5 @@ class AlarmReceiver: BroadcastReceiver() {
             notify(200, builder.build())
             Log.d("alal","notified")
         }
-
     }
-
-
-
-
 }

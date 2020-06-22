@@ -28,6 +28,7 @@ class StressCollectActivity : AppCompatActivity() {
     lateinit var dbReference: DatabaseReference
     val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
     lateinit var prefs : SharedPreferences
+    var previousTime:Long = 0
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +90,8 @@ class StressCollectActivity : AppCompatActivity() {
                     score = score + i
                 }
                 Log.d("surveyscore",score.toString())
-                Toast.makeText(this,"점수: ${score}",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"감사합니다",Toast.LENGTH_SHORT).show()
+
 
                 var stCount = prefs.getInt(getString(R.string.stress_collect_count), 0)
 
@@ -97,6 +99,7 @@ class StressCollectActivity : AppCompatActivity() {
 
                 if (stCount == 0) {
                     showAppUsageStats(getAppUsageStats(curTime))
+                    //TODO:curTime말고 사용자가 가입한 시간으로
                 }
                 else {
                     dbReference.child("user").child(key!!).child("stress").orderByChild("index")
@@ -108,9 +111,9 @@ class StressCollectActivity : AppCompatActivity() {
                             override fun onDataChange(p0: DataSnapshot) {
                                 for (children in p0.children) {
                                     Log.w("SCA_Usage", children.value.toString())
-                                    val previousTime = children.getValue(Stress_st::class.java)
+                                    previousTime = children.getValue(Stress_st::class.java)!!.timestamp.toLong()
                                     Log.w("SCA_Stress", previousTime.toString())
-                                    showAppUsageStats(getAppUsageStats(curTime - previousTime!!.timestamp.toLong()))
+                                    showAppUsageStats(getAppUsageStats(previousTime))
                                 }
                             }
 
@@ -136,9 +139,7 @@ class StressCollectActivity : AppCompatActivity() {
                 edit.putInt(getString(R.string.stress_collect_count), stCount)
                 edit.commit()
             }
-
             finish()
-
         }
     }
 
@@ -166,7 +167,7 @@ class StressCollectActivity : AppCompatActivity() {
         var statsArr = ArrayList<UsageStat>()
 
         usageStats.forEach {
-            if(it.lastTimeUsed>0){
+            if(it.totalTimeInForeground>0 && it.lastTimeUsed>previousTime){
                 statsArr.add(UsageStat(it.packageName,dateFormat.format(it.lastTimeUsed),it.totalTimeInForeground))
                 Log.d("appusing",statsArr.last().toString())
             }
@@ -176,6 +177,6 @@ class StressCollectActivity : AppCompatActivity() {
         var usage = UsageStatsCollection(ArrayList(), prefs.getInt(getString(R.string.stress_collect_count), 0)!!.toString(), System.currentTimeMillis().toString())
         usage.statsList = statsArr
 
-        dbReference.child("user").child(prefs.getString(getString(R.string.pref_previously_logined), "null")!!).child("usagestats").push().setValue(usage)
+        dbReference.child("user").child(prefs.getString(getString(R.string.pref_previously_logined), "null")!!).child("usagestatsStress").push().setValue(usage)
     }
 }

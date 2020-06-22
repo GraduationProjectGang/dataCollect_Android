@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_pop_up.*
+import java.lang.Thread.sleep
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -66,6 +67,7 @@ class PopUpFragment : DialogFragment() {
 
     override fun onPause() {
         super.onPause()
+        sleep(1000)
         button_permit.text = "다음"
     }
 
