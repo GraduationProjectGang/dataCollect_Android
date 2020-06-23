@@ -94,16 +94,21 @@ class StressCollectActivity : AppCompatActivity() {
 
 
                 var stCount = prefs.getInt(getString(R.string.stress_collect_count), 0)
+                Log.w("SCA_COUNT", stCount.toString())
 
                 val curTime = System.currentTimeMillis()
 
                 if (stCount == 0) {
-                    showAppUsageStats(getAppUsageStats(curTime))
+                    val uArr = showAppUsageStats(getAppUsageStats(curTime))
+                    val ucol = UsageStatsCollection(uArr, stCount.toString(), curTime, dateFormat.format(curTime))
+                    dbReference.child("user").child(prefs.getString(getString(R.string.pref_previously_logined), "null")!!).child("usagestatsStress").push().setValue(ucol)
                     //TODO:curTime말고 사용자가 가입한 시간으로
+                    val st = Stress_st(curTime.toString(), score.toString(), stCount.toString())
+                    dbReference.child("user").child(key!!).child("stress").push().setValue(st)
                 }
                 else {
                     dbReference.child("user").child(key!!).child("stress").orderByChild("index")
-                        .equalTo(stCount.toString()).addListenerForSingleValueEvent(object: ValueEventListener{
+                        .equalTo((stCount - 1).toString()).addListenerForSingleValueEvent(object: ValueEventListener{
                             override fun onCancelled(p0: DatabaseError) {
                                 Log.w("SCA_Error", p0.toString())
                             }
@@ -113,31 +118,23 @@ class StressCollectActivity : AppCompatActivity() {
                                     Log.w("SCA_Usage", children.value.toString())
                                     previousTime = children.getValue(Stress_st::class.java)!!.timestamp.toLong()
                                     Log.w("SCA_Stress", previousTime.toString())
-                                    showAppUsageStats(getAppUsageStats(previousTime))
+                                    val uArr = showAppUsageStats(getAppUsageStats(curTime))
+                                    val ucol = UsageStatsCollection(uArr, stCount.toString(), curTime, dateFormat.format(curTime))
+                                    dbReference.child("user").child(prefs.getString(getString(R.string.pref_previously_logined), "null")!!).child("usagestatsStress").push().setValue(ucol)
+                                    val st = Stress_st(curTime.toString(), score.toString(), stCount.toString())
+                                    dbReference.child("user").child(key!!).child("stress").push().setValue(st)
                                 }
                             }
 
                         })
+
+
                 }
 
-                dbReference.child("user").orderByKey().equalTo(key).addListenerForSingleValueEvent(object: ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {
-                        Log.w("SCA_Error", p0.toString())
-                    }
-
-                    override fun onDataChange(p0: DataSnapshot) {
-                        for (children in p0.children) {
-                            Log.w("SCA_Right", children.key)
-                            val st = Stress_st(curTime.toString(), score.toString(), stCount.toString())
-                            dbReference.child("user").child(children.key!!).child("stress").push().setValue(st)
-                        }
-                    }
-                })
-
-                stCount++
                 val edit = prefs.edit() as SharedPreferences.Editor
-                edit.putInt(getString(R.string.stress_collect_count), stCount)
+                edit.putInt(getString(R.string.stress_collect_count), stCount + 1)
                 edit.commit()
+
             }
             finish()
         }
@@ -157,7 +154,7 @@ class StressCollectActivity : AppCompatActivity() {
         return queryUsageStats
     }
 
-    fun showAppUsageStats(usageStats: MutableList<UsageStats>) {
+    fun showAppUsageStats(usageStats: MutableList<UsageStats>) : ArrayList<UsageStat> {
 
        val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
         Log.d("appusing", usageStats.size.toString())
@@ -174,10 +171,6 @@ class StressCollectActivity : AppCompatActivity() {
         }
         Log.d("appusing","statsArrLen: ${statsArr.size}")
 
-        val curTime = System.currentTimeMillis()
-        var usage = UsageStatsCollection(ArrayList(), prefs.getInt(getString(R.string.stress_collect_count), 0)!!.toString(), curTime,dateFormat.format(curTime))
-        usage.statsList = statsArr
-
-        dbReference.child("user").child(prefs.getString(getString(R.string.pref_previously_logined), "null")!!).child("usagestatsStress").push().setValue(usage)
+        return statsArr
     }
 }
