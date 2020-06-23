@@ -53,20 +53,6 @@ class UserMainActivity : AppCompatActivity() {
             .enqueueUniquePeriodicWork(uniqueWorkName, ExistingPeriodicWorkPolicy.REPLACE, collectRequest)
     }
 
-    override fun onResume() {
-        super.onResume()
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this.baseContext)
-        if (!prefs.getBoolean(getString(R.string.worker_work), false)) {
-            createWorker()
-            var edit = prefs.edit() as SharedPreferences.Editor
-            edit.putBoolean(getString(R.string.worker_work), true)
-            edit.commit()
-        }
-        usercode.text =
-            "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "null")
-        u_key =  prefs.getString(getString(R.string.pref_previously_logined), "null")!!
-    }
-
     fun init() {
         val mystring = "프로젝트 가이드 다시보기"
         val content = SpannableString(mystring)
@@ -79,16 +65,21 @@ class UserMainActivity : AppCompatActivity() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
         usercode.text =
             "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "null")
+        u_key =  prefs.getString(getString(R.string.pref_previously_logined), "null")!!
+
+
+        Log.w("UMA_worker", prefs.getBoolean(getString(R.string.pref_previously_started), false).toString())
+
+        if (!prefs.getBoolean(getString(R.string.pref_previously_started), false)) {
+            var edit = prefs.edit() as SharedPreferences.Editor
+            edit.putBoolean(getString(R.string.pref_previously_started), true)
+            edit.commit()
+
+            createWorker()
+        }
 
         button_survey.setOnClickListener {
             val intent = Intent(this, StressCollectActivity::class.java)
-            startActivity(intent)
-        }
-
-        //첫 실행이면 SignInActivity 실행
-        var previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false)
-        if (!previouslyStarted) {
-            val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
         }
 

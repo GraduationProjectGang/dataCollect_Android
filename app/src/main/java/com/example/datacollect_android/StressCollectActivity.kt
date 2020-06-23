@@ -168,7 +168,7 @@ class StressCollectActivity : AppCompatActivity() {
 
         usageStats.forEach {
             if(it.totalTimeInForeground>0 && it.lastTimeUsed>previousTime){
-                statsArr.add(UsageStat(it.packageName,it.lastTimeUsed,it.totalTimeInForeground))
+                statsArr.add(UsageStat(it.packageName, dateFormat.format(it.lastTimeUsed), it.totalTimeInForeground))
                 Log.d("appusing",statsArr.last().toString())
             }
         }

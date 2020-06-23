@@ -94,7 +94,6 @@ class SignInActivity : AppCompatActivity() {
                 val prefs = PreferenceManager.getDefaultSharedPreferences(this.baseContext)
                 var edit = prefs.edit() as SharedPreferences.Editor
                 edit.putString(getString(R.string.pref_previously_logined), key)
-                edit.putBoolean(getString(R.string.pref_previously_started), true)
                 edit.commit()
 
                 val intent = Intent(applicationContext,Tutorial1Activity::class.java) //다음이어질 액티비티
