@@ -99,10 +99,10 @@ class StressCollectActivity : AppCompatActivity() {
                 val curTime = System.currentTimeMillis()
 
                 if (stCount == 0) {
-                    val uArr = showAppUsageStats(getAppUsageStats(curTime))
-                    val ucol = UsageStatsCollection(uArr, stCount.toString(), curTime, dateFormat.format(curTime))
+                    val uArr = showAppUsageStats(getAppUsageStats(curTime - 9000000))
+                    val ucol = UsageStatsCollection(ArrayList(), stCount.toString(), curTime, dateFormat.format(curTime))
+                    ucol.statsList = uArr
                     dbReference.child("user").child(prefs.getString(getString(R.string.pref_previously_logined), "null")!!).child("usagestatsStress").push().setValue(ucol)
-                    //TODO:curTime말고 사용자가 가입한 시간으로
                     val st = Stress_st(curTime.toString(), score.toString(), stCount.toString())
                     dbReference.child("user").child(key!!).child("stress").push().setValue(st)
                 }
@@ -118,8 +118,9 @@ class StressCollectActivity : AppCompatActivity() {
                                     Log.w("SCA_Usage", children.value.toString())
                                     previousTime = children.getValue(Stress_st::class.java)!!.timestamp.toLong()
                                     Log.w("SCA_Stress", previousTime.toString())
-                                    val uArr = showAppUsageStats(getAppUsageStats(curTime))
-                                    val ucol = UsageStatsCollection(uArr, stCount.toString(), curTime, dateFormat.format(curTime))
+                                    val uArr = showAppUsageStats(getAppUsageStats(curTime - previousTime))
+                                    val ucol = UsageStatsCollection(ArrayList(), stCount.toString(), curTime, dateFormat.format(curTime))
+                                    ucol.statsList = uArr
                                     dbReference.child("user").child(prefs.getString(getString(R.string.pref_previously_logined), "null")!!).child("usagestatsStress").push().setValue(ucol)
                                     val st = Stress_st(curTime.toString(), score.toString(), stCount.toString())
                                     dbReference.child("user").child(key!!).child("stress").push().setValue(st)
