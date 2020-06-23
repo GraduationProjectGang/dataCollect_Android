@@ -46,7 +46,7 @@
             android:textColor="@android:color/black"
             android:textSize="17dp"
             android:text="
-        - 별명 (익명성을 위함)\n
+        - 이름\n
         - 학년\n
         - 성별\n
         - 휴대폰번호"
@@ -73,7 +73,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textColor="@android:color/black"
-                android:text="별명"
+                android:text="이름"
                 />
             <EditText
                 android:id="@+id/user_nickname"

@@ -35,7 +35,7 @@
     <style name="ViewSurvey">
         <item name="android:textStyle">bold</item>
         <item name="android:layout_width">1dp</item>
-        <item name="android:background">#2B2B2B</item>
+        <item name="android:background">#8A989898</item>
         <item name="android:button">@null</item>
         <item name="android:drawableBottom">?android:attr/listChoiceIndicatorSingle</item>
         <item name="android:gravity">center_horizontal|bottom</item>
