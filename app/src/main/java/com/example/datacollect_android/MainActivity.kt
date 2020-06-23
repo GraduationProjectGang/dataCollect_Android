@@ -214,7 +214,6 @@ class MainActivity : AppCompatActivity() {
         usageStats.forEach {
             if(it.lastTimeUsed>0){
                 statsArr.add(UsageStat(it.packageName, dateFormat.format(it.lastTimeUsed), it.totalTimeInForeground))
-                statsArr.add(UsageStat(it.packageName,it.lastTimeUsed,it.totalTimeInForeground))
                 Log.d("appusing",statsArr.last().toString())
             }
         }
