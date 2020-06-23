@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -112,7 +113,7 @@ class UserMainActivity : AppCompatActivity() {
             timeInMillis = System.currentTimeMillis()
             set(Calendar.HOUR_OF_DAY, time)
         }
-
+        Log.d("alarmset","alarmsetat${time}")
         val alarmIntent = Intent(this, AlarmReceiver::class.java)
         val pendingIntent =
             PendingIntent.getBroadcast(this, time, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -122,7 +123,6 @@ class UserMainActivity : AppCompatActivity() {
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 //                Log.d("alal","dd")
 //
-
             //test
 //            alarmManager.setAndAllowWhileIdle(
 //                    AlarmManager.RTC_WAKEUP,

@@ -63,6 +63,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
     lateinit var fbDatabase: FirebaseDatabase
     lateinit var dbReference: DatabaseReference
     var mTimestamp:Long = 0
+    val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
 
     companion object var flag = false
 
@@ -112,7 +113,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
                 stopLocationUpdates()
             }
 
-        var usage = UsageStatsCollection(ArrayList(), "coroutine", mTimestamp.toString())
+        var usage = UsageStatsCollection(ArrayList(), "coroutine", mTimestamp, dateFormat.format(mTimestamp))
         usage.statsList = stats
 
 
@@ -172,7 +173,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
 
         usageStats.forEach {
             if(it.totalTimeInForeground>0 && it.lastTimeUsed>mTimestamp-900000){
-                statsArr.add(UsageStat(it.packageName,dateFormat.format(it.lastTimeUsed),it.totalTimeInForeground))
+                statsArr.add(UsageStat(it.packageName,it.lastTimeUsed,it.totalTimeInForeground))
                 Log.d("appusing",statsArr.last().toString())
             }
         }

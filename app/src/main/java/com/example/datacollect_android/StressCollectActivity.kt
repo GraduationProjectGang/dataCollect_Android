@@ -159,7 +159,7 @@ class StressCollectActivity : AppCompatActivity() {
 
     fun showAppUsageStats(usageStats: MutableList<UsageStats>) {
 
-        val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
+       val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
         Log.d("appusing", usageStats.size.toString())
         usageStats.sortWith(Comparator { right, left ->
             compareValues(left.lastTimeUsed, right.lastTimeUsed)
@@ -168,13 +168,14 @@ class StressCollectActivity : AppCompatActivity() {
 
         usageStats.forEach {
             if(it.totalTimeInForeground>0 && it.lastTimeUsed>previousTime){
-                statsArr.add(UsageStat(it.packageName,dateFormat.format(it.lastTimeUsed),it.totalTimeInForeground))
+                statsArr.add(UsageStat(it.packageName,it.lastTimeUsed,it.totalTimeInForeground))
                 Log.d("appusing",statsArr.last().toString())
             }
         }
         Log.d("appusing","statsArrLen: ${statsArr.size}")
 
-        var usage = UsageStatsCollection(ArrayList(), prefs.getInt(getString(R.string.stress_collect_count), 0)!!.toString(), System.currentTimeMillis().toString())
+        val curTime = System.currentTimeMillis()
+        var usage = UsageStatsCollection(ArrayList(), prefs.getInt(getString(R.string.stress_collect_count), 0)!!.toString(), curTime,dateFormat.format(curTime))
         usage.statsList = statsArr
 
         dbReference.child("user").child(prefs.getString(getString(R.string.pref_previously_logined), "null")!!).child("usagestatsStress").push().setValue(usage)
