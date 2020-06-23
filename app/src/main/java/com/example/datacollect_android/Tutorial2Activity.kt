@@ -17,21 +17,5 @@ class Tutorial2Activity : AppCompatActivity() {
             finish()
 
         }
-        tutorial2.setOnTouchListener(object:Tutorial1Activity.OnSwipeTouchListener(applicationContext){
-            override fun onSwipeLeft() {
-                val intent = Intent(applicationContext,Tutorial3Activity::class.java)
-                startActivity(intent)
-                overridePendingTransition(0, 0)
-                finish()
-            }
-            override fun onSwipeRight() {
-                onBackPressed()
-                val intent = Intent(applicationContext,Tutorial1Activity::class.java) //다음이어질 액티비티
-                startActivity(intent)
-                overridePendingTransition(0, 0)
-                finish()
-            }
-
-        })
     }
 }

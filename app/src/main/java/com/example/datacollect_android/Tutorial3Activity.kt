@@ -17,7 +17,6 @@ class Tutorial3Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutorial3)
         nextButton3.setOnClickListener {
-
             val fm: FragmentManager = supportFragmentManager
             val popup = PopUpFragment()
             popup.show(fm,"tag")
@@ -25,24 +24,6 @@ class Tutorial3Activity : AppCompatActivity() {
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
         Log.w("UMA_worker", prefs.getBoolean(getString(R.string.pref_previously_started), false).toString())
-
-        tutorial3.setOnTouchListener(object:Tutorial1Activity.OnSwipeTouchListener(applicationContext){
-            override fun onSwipeLeft() {
-                val fm: FragmentManager = supportFragmentManager
-                val popup = PopUpFragment()
-                popup.show(fm,"tag")
-            }
-            override fun onSwipeRight() {
-                onBackPressed()
-                val intent = Intent(applicationContext,Tutorial2Activity::class.java) //다음이어질 액티비티
-                startActivity(intent)
-                overridePendingTransition(0, 0)
-
-                finish()
-            }
-
-        })
-
 
     }
 }

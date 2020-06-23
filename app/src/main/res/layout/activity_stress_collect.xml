@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:scrollbarAlwaysDrawVerticalTrack="true"
-    android:scrollbarSize="3dp"
+    android:scrollbarSize="10dp"
     tools:context=".StressCollectActivity">
     <ImageView
         android:layout_marginTop="10dp"
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="17dp"
         android:layout_marginTop="3dp"
-        android:text="다음 4문항에 응답해주세요"
+        android:text="다음 4문항에 응답해주세요. 찡그린 표정이 있는 쪽이 스트레스가 많은 쪽입니다."
         android:textColor="#000000"
         android:textSize="18dp" />
 
@@ -81,10 +81,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <ImageView
+                    android:layout_marginTop="5dp"
+                    android:scaleType="centerInside"
                     android:paddingHorizontal="5dp"
-                    android:src="@drawable/stress_left"
+                    android:src="@drawable/stress_right"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"/>
+                    android:layout_height="50dp"/>
             </LinearLayout>
 
             <RadioGroup
@@ -196,7 +198,13 @@
 "
                 android:textColor="#000000"
                 android:textSize="17dp" />
-
+            <ImageView
+                android:layout_marginTop="5dp"
+                android:scaleType="centerInside"
+                android:paddingHorizontal="5dp"
+                android:src="@drawable/stress_right"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
             <RadioGroup
                 android:id="@+id/stressRadio4"
                 android:layout_width="match_parent"
@@ -297,7 +305,13 @@
                 android:text="개인적인 문제를 잘 처리할 수 있다고 자신감을 가진 적이 얼마나 자주 있었습니까?
 "
                 />
-
+            <ImageView
+                android:layout_marginTop="5dp"
+                android:scaleType="centerInside"
+                android:paddingHorizontal="5dp"
+                android:src="@drawable/stress_left"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
             <RadioGroup
                 android:id="@+id/stressRadio2"
                 android:gravity="center"
@@ -396,6 +410,13 @@
                 android:lineSpacingExtra="8sp"
                 android:text="일이 내 뜻대로 진행되고 있다고 느낀 적이 얼마나 자주 있었습니까?"
                 />
+            <ImageView
+                android:layout_marginTop="5dp"
+                android:scaleType="centerInside"
+                android:paddingHorizontal="5dp"
+                android:src="@drawable/stress_left"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
             <RadioGroup
                 android:id="@+id/stressRadio3"
                 android:gravity="center"

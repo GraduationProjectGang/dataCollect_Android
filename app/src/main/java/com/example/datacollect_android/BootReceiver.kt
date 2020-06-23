@@ -25,9 +25,7 @@ class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Log.d("bootReceiver","Bootreceived")
         setAlarmAt(context,10)
-        setAlarmAt(context,14)
-        setAlarmAt(context,18)
-        setAlarmAt(context,22)
+
     }
 
 
@@ -36,28 +34,15 @@ class BootReceiver : BroadcastReceiver() {
             timeInMillis = System.currentTimeMillis()
             set(Calendar.HOUR_OF_DAY, time)
         }
-
+        Log.d("alarmset","alarmsetat${time}")
         val alarmIntent = Intent(context, AlarmReceiver::class.java)
+        alarmIntent.putExtra("time",time)
         val pendingIntent =
             PendingIntent.getBroadcast(context, time, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val alarmManager = context.getSystemService(ALARM_SERVICE) as AlarmManager
-        if (alarmManager != null) {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                Log.d("alal","dd")
-//
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-            //test
-//            alarmManager.setAndAllowWhileIdle(
-//                    AlarmManager.RTC_WAKEUP,
-//                    System.currentTimeMillis()+6000,
-//                    pendingIntent
-//                )
-            alarmManager.setAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                pendingIntent
-            )
-        }
+        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,pendingIntent)
     }
+
 }
 

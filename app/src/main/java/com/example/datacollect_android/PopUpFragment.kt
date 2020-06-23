@@ -99,14 +99,14 @@ class PopUpFragment : DialogFragment() {
 
         if (granted == false){
             // 권한이 없을 경우 권한 요구 페이지 이동
-            val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+            val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
             startActivity(intent)
         }else{
+            val intent = Intent(context, UserMainActivity::class.java)
+            startActivity(intent)
             activity!!.finish()
-        }
 
-        val intent = Intent(context, UserMainActivity::class.java)
-        startActivity(intent)
+        }
     }
 
     companion object {

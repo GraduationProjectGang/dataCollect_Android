@@ -23,8 +23,7 @@ class AlarmReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         Log.d("setalarm","received")
         val CHANNEL_ID = "$context.packageName-${R.string.app_name}"
-        val time = intent!!.getIntExtra("time",0)
-        val min = intent!!.getIntExtra("min",0)
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = R.string.channel_name
@@ -43,7 +42,7 @@ class AlarmReceiver: BroadcastReceiver() {
         val builder = NotificationCompat.Builder(context!!, CHANNEL_ID).apply {
             setSmallIcon(R.drawable.full_swipe)
             setContentTitle("스트레스 측정 설문 요청")
-            setContentText("스트레스 설문에 참여해주세요\uD83D\uDD25${time} ${min}")
+            setContentText("스트레스 설문에 참여해주세요\uD83D\uDD25")
             priority = NotificationCompat.PRIORITY_HIGH
             setAutoCancel(true)
             setContentIntent(pendingIntent)
@@ -52,5 +51,33 @@ class AlarmReceiver: BroadcastReceiver() {
             notify(200, builder.build())
             Log.d("alal","notified")
         }
+
+        val timeInt = System.currentTimeMillis() % Integer.MAX_VALUE
+
+        val cal = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+        var addtime = 0
+        if (cal>22 || cal < 9) {
+            addtime = 10
+        }else{
+            addtime = 2
+        }
+        setAlarm(context, addtime)
+
+
+
+    }
+    fun setAlarm(context:Context, addtime: Int) {
+        val calendar: Calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            add(Calendar.HOUR_OF_DAY, addtime)
+        }
+        Log.d("alarmset","receiver alarm set${addtime}")
+        val alarmIntent = Intent(context, AlarmReceiver::class.java)
+        alarmIntent.putExtra("time",addtime)
+        val pendingIntent =
+            PendingIntent.getBroadcast(context, addtime, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,pendingIntent)
     }
 }
