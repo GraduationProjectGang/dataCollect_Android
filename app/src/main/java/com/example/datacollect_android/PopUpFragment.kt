@@ -105,15 +105,8 @@ class PopUpFragment : DialogFragment() {
             activity!!.finish()
         }
 
-        //tutorial 다 수행했다는 flag
-        val prefs = PreferenceManager.getDefaultSharedPreferences(activity!!.getBaseContext())
-        var previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false)
-        if(!previouslyStarted)
-        {
-            var edit = prefs.edit() as SharedPreferences.Editor
-            edit.putBoolean(getString(R.string.pref_previously_started),true)
-            edit.commit()
-        }
+        val intent = Intent(context, UserMainActivity::class.java)
+        startActivity(intent)
     }
 
     companion object {

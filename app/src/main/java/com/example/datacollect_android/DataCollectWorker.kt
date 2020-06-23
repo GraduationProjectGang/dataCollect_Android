@@ -111,20 +111,20 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
                 }
                 //stop location request when iteration was ended
                 stopLocationUpdates()
+
+                var usage = UsageStatsCollection(ArrayList(), "coroutine", mTimestamp, dateFormat.format(mTimestamp))
+                usage.statsList = stats
+
+                fbDatabase = FirebaseDatabase.getInstance()
+                dbReference = fbDatabase.reference
+                dbReference.child("user").child(userKey).child("rotatevector").push().setValue(mutableListOrientationAngles)
+                dbReference.child("user").child(userKey).child("usagestatsCoroutine").push().setValue(usage)
             }
 
-        var usage = UsageStatsCollection(ArrayList(), "coroutine", mTimestamp, dateFormat.format(mTimestamp))
-        usage.statsList = stats
 
 
-        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        if (prefs.getBoolean(applicationContext.getString(R.string.worker_work), false)) {
-            fbDatabase = FirebaseDatabase.getInstance()
-            dbReference = fbDatabase.reference
-            dbReference.child("user").child(userKey).child("rotatevector").push().setValue(mutableListOrientationAngles)
-            dbReference.child("user").child(userKey).child("usagestatsCoroutine").push().setValue(usage)
 
-        }
+
         Result.success()
     }
 
@@ -173,7 +173,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
 
         usageStats.forEach {
             if(it.totalTimeInForeground>0 && it.lastTimeUsed>mTimestamp-900000){
-                statsArr.add(UsageStat(it.packageName,it.lastTimeUsed,it.totalTimeInForeground))
+                statsArr.add(UsageStat(it.packageName, dateFormat.format(it.lastTimeUsed), it.totalTimeInForeground))
                 Log.d("appusing",statsArr.last().toString())
             }
         }
