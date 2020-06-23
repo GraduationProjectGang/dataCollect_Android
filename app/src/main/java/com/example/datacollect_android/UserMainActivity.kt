@@ -92,10 +92,14 @@ class UserMainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        setAlarmAt(10)
-        setAlarmAt(14)
-        setAlarmAt(18)
-        setAlarmAt(22)
+        setAlarmAt(10,0)
+        setAlarmAt(12,0)
+        setAlarmAt(15,0)
+        setAlarmAt(15,46)
+        setAlarmAt(15,49)
+        setAlarmAt(16,26)
+        setAlarmAt(20,0)
+        setAlarmAt(22,0)
         // Set the alarm to start at approximately 2p.m. and 10p.m.
 
         val pm: PackageManager = this.packageManager
@@ -108,16 +112,25 @@ class UserMainActivity : AppCompatActivity() {
         );
     }
 
-    fun setAlarmAt(time: Int) {
+    fun setAlarmAt(time: Int, min:Int) {
         val calendar: Calendar = Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
             set(Calendar.HOUR_OF_DAY, time)
+            set(Calendar.MINUTE,min)
         }
         Log.d("alarmset","alarmsetat${time}")
         val alarmIntent = Intent(this, AlarmReceiver::class.java)
+        alarmIntent.putExtra("time",time)
+        alarmIntent.putExtra("min",min)
         val pendingIntent =
-            PendingIntent.getBroadcast(this, time, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getBroadcast(this, time+min, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,300000,pendingIntent)
+//        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,pendingIntent)
+
 
         if (alarmManager != null) {
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -129,6 +142,9 @@ class UserMainActivity : AppCompatActivity() {
 //                    System.currentTimeMillis()+6000,
 //                    pendingIntent
 //                )
+
+
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 alarmManager.setAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
@@ -136,6 +152,10 @@ class UserMainActivity : AppCompatActivity() {
                     pendingIntent
                 )
             }
+
+
+
+
         }
     }
 

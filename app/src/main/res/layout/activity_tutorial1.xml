@@ -8,6 +8,12 @@
     android:orientation="vertical"
     android:id="@+id/tutorial1"
     tools:context=".Tutorial1Activity">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="9"
+    android:orientation="vertical">
     <ImageView
         android:layout_marginTop="10dp"
         android:src="@drawable/text_logo"
@@ -17,11 +23,6 @@
         android:paddingRight="3dp"
         android:layout_marginRight="5dp"
         />
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="9"
-    android:orientation="vertical">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"

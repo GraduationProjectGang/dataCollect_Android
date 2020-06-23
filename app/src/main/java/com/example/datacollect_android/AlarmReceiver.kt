@@ -21,8 +21,10 @@ import java.util.*
 
 class AlarmReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-
+        Log.d("setalarm","received")
         val CHANNEL_ID = "$context.packageName-${R.string.app_name}"
+        val time = intent!!.getIntExtra("time",0)
+        val min = intent!!.getIntExtra("min",0)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = R.string.channel_name
@@ -41,7 +43,7 @@ class AlarmReceiver: BroadcastReceiver() {
         val builder = NotificationCompat.Builder(context!!, CHANNEL_ID).apply {
             setSmallIcon(R.drawable.full_swipe)
             setContentTitle("스트레스 측정 설문 요청")
-            setContentText("스트레스 설문에 참여해주세요\uD83D\uDD25")
+            setContentText("스트레스 설문에 참여해주세요\uD83D\uDD25${time} ${min}")
             priority = NotificationCompat.PRIORITY_HIGH
             setAutoCancel(true)
             setContentIntent(pendingIntent)

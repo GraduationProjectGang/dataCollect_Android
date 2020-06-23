@@ -77,6 +77,15 @@
                 android:text="중요한 일을 조절할 수 없다고 느낀 적이 얼마나 자주 있었습니까?
 "
                 />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:paddingHorizontal="5dp"
+                    android:src="@drawable/stress_left"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"/>
+            </LinearLayout>
 
             <RadioGroup
                 android:id="@+id/stressRadio1"
@@ -168,6 +177,106 @@
             </RadioGroup>
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:layout_marginLeft="17dp"
+                android:lineSpacingExtra="9sp"
+                android:text="Q2."
+                android:textColor="#2463b6"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:lineSpacingExtra="8sp"
+                android:text="어려운 일이 너무 많아져서 극복할 수 없다고 느낀 적이 얼마나 자주 있었습니까?
+"
+                android:textColor="#000000"
+                android:textSize="17dp" />
+
+            <RadioGroup
+                android:id="@+id/stressRadio4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="3dp"
+                android:layout_marginVertical="5dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="3dp">
+
+                <RadioButton
+                    style="@style/RadioWithTextOnTop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="@string/zero"
+                    android:textSize="15dp" />
+
+                <View
+                    android:id="@+id/view13"
+                    style="@style/ViewSurvey"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="3dp"
+                    android:layout_marginVertical="5dp" />
+
+                <RadioButton
+                    style="@style/RadioWithTextOnTop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="@string/one"
+                    android:textSize="15dp" />
+
+                <View
+                    android:id="@+id/view14"
+                    style="@style/ViewSurvey"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="3dp"
+                    android:layout_marginVertical="5dp" />
+
+                <RadioButton
+                    style="@style/RadioWithTextOnTop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="@string/two"
+                    android:textSize="15dp" />
+
+                <View
+                    android:id="@+id/view15"
+                    style="@style/ViewSurvey"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="3dp"
+                    android:layout_marginVertical="5dp" />
+
+                <RadioButton
+                    style="@style/RadioWithTextOnTop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="@string/three"
+                    android:textSize="15dp" />
+
+                <View
+                    android:id="@+id/view16"
+                    style="@style/ViewSurvey"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="3dp"
+                    android:layout_marginVertical="5dp" />
+
+                <RadioButton
+                    style="@style/RadioWithTextOnTop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="@string/four"
+                    android:textSize="15dp" />
+            </RadioGroup>
+
+            <TextView
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -176,7 +285,7 @@
                 android:textSize="20dp"
                 android:textColor="#2463b6"
                 android:lineSpacingExtra="9sp"
-                android:text="Q2."
+                android:text="Q3."
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -188,6 +297,7 @@
                 android:text="개인적인 문제를 잘 처리할 수 있다고 자신감을 가진 적이 얼마나 자주 있었습니까?
 "
                 />
+
             <RadioGroup
                 android:id="@+id/stressRadio2"
                 android:gravity="center"
@@ -275,7 +385,7 @@
                 android:textSize="20dp"
                 android:textColor="#2463b6"
                 android:lineSpacingExtra="9sp"
-                android:text="Q3."
+                android:text="Q4."
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -359,105 +469,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/four" />
             </RadioGroup>
-            <TextView
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:layout_marginLeft="17dp"
-                android:textSize="20dp"
-                android:textColor="#2463b6"
-                android:lineSpacingExtra="9sp"
-                android:text="Q4."
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="17dp"
-                android:layout_marginLeft="20dp"
-                android:textColor="#000000"
-                android:lineSpacingExtra="8sp"
-                android:text="어려운 일이 너무 많아져서 극복할 수 없다고 느낀 적이 얼마나 자주 있었습니까?
-"
-                />
-            <RadioGroup
-                android:id="@+id/stressRadio4"
-                android:gravity="center"
-                android:padding="3dp"
-                android:layout_marginVertical="5dp"
-                android:layout_marginHorizontal="3dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
 
-                <RadioButton
-                    style="@style/RadioWithTextOnTop"
-                    android:layout_margin="4dp"
-                    android:textSize="15dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/zero" />
-
-                <View
-                    style="@style/ViewSurvey"
-                    android:id="@+id/view13"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="3dp"
-                    android:layout_marginVertical="5dp"/>
-
-                <RadioButton
-                    style="@style/RadioWithTextOnTop"
-                    android:layout_margin="4dp"
-                    android:textSize="15dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/one" />
-
-                <View
-                    style="@style/ViewSurvey"
-                    android:id="@+id/view14"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="3dp"
-                    android:layout_marginVertical="5dp"/>
-
-                <RadioButton
-                    style="@style/RadioWithTextOnTop"
-                    android:layout_margin="4dp"
-                    android:textSize="15dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/two" />
-
-                <View
-                    style="@style/ViewSurvey"
-                    android:id="@+id/view15"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="3dp"
-                    android:layout_marginVertical="5dp"/>
-
-                <RadioButton
-                    style="@style/RadioWithTextOnTop"
-                    android:layout_margin="4dp"
-                    android:textSize="15dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/three" />
-
-                <View
-                    style="@style/ViewSurvey"
-                    android:id="@+id/view16"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="3dp"
-                    android:layout_marginVertical="5dp"/>
-
-                <RadioButton
-                    style="@style/RadioWithTextOnTop"
-                    android:layout_margin="4dp"
-                    android:textSize="15dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/four" />
-            </RadioGroup>
         </LinearLayout>
 
     </ScrollView>
