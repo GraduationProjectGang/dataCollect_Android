@@ -118,7 +118,7 @@ class StressCollectActivity : AppCompatActivity() {
                                     Log.w("SCA_Usage", children.value.toString())
                                     previousTime = children.getValue(Stress_st::class.java)!!.timestamp.toLong()
                                     Log.w("SCA_Stress", previousTime.toString())
-                                    val uArr = showAppUsageStats(getAppUsageStats(curTime - previousTime))
+                                    val uArr = showAppUsageStats(getAppUsageStats(previousTime))
                                     val ucol = UsageStatsCollection(ArrayList(), stCount.toString(), curTime, dateFormat.format(curTime))
                                     ucol.statsList = uArr
                                     dbReference.child("user").child(prefs.getString(getString(R.string.pref_previously_logined), "null")!!).child("usagestatsStress").push().setValue(ucol)
