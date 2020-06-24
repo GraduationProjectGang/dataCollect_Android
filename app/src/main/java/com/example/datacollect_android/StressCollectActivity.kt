@@ -16,11 +16,11 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.fragment.app.FragmentManager
+import androidx.work.Constraints
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_stress_collect.*
-import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
@@ -168,9 +168,17 @@ class StressCollectActivity : AppCompatActivity() {
                 edit.putInt(getString(R.string.stress_collect_count), stCount + 1)
                 edit.commit()
 
-                val RR = RotateRunnable(applicationContext)
-                val th = Thread(RR)
-                th.start()
+//                val RR = RotateRunnable(applicationContext)
+//                val th = Thread(RR)
+//                th.start()
+                val constraints = Constraints.Builder()
+                    .setRequiresCharging(true)
+                    .build()
+                val WorkTask = OneTimeWorkRequestBuilder<DataCollectWorker>()
+                    .setConstraints(constraints)
+                    .addTag("Rotate")
+                    .build()
+                WorkManager.getInstance(applicationContext).enqueue(WorkTask)
 
                 finish()
             }
