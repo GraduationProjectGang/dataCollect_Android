@@ -4,18 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
-import android.view.GestureDetector
-import android.view.MotionEvent
-import android.view.View
+import android.os.PowerManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.firebase.database.*
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_tutorial1.*
-import java.io.File
-import java.io.FileWriter
+import android.provider.Settings
+
 
 class Tutorial1Activity : AppCompatActivity() {
 
@@ -39,6 +38,8 @@ class Tutorial1Activity : AppCompatActivity() {
 
         initPermission()
 
+        addWhiteList()
+
         fbDatabase = FirebaseDatabase.getInstance()
         dbReference = fbDatabase.reference
 
@@ -54,6 +55,24 @@ class Tutorial1Activity : AppCompatActivity() {
             finish()
         }
 
+    }
+
+    fun addWhiteList() {
+        val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
+        var isWhite = false
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            isWhite = pm.isIgnoringBatteryOptimizations(applicationContext.packageName)
+        }
+
+        if (!isWhite) {
+            val setdialog = AlertDialog.Builder(this)
+            setdialog.setTitle("추가 설정이 필요합니다.")
+                .setMessage("어플을 문제없이 사용하기 위해서는 해당 어플을 \"배터리 사용량 최적화\" 목록에서 \"제외\"해야 합니다. 설정화면으로 이동하시겠습니까?")
+                .setPositiveButton("네") { dialog, which -> startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)) }
+                .setNegativeButton("아니오") { dialog, which -> Toast.makeText(this, "설정을 취소했습니다.", Toast.LENGTH_SHORT).show() }
+                .create()
+                .show()
+        }
     }
 
 
@@ -79,7 +98,5 @@ class Tutorial1Activity : AppCompatActivity() {
             }
         }
     }
-
-
 
 }
