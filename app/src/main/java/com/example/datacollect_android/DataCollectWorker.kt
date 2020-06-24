@@ -112,13 +112,18 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
                 //stop location request when iteration was ended
                 stopLocationUpdates()
 
+                var loc = Locate(mutableListOf(), dateFormat.format(mTimestamp))
+                loc.locationList = locationList
                 var usage = UsageStatsCollection(ArrayList(), "coroutine", mTimestamp, dateFormat.format(mTimestamp))
                 usage.statsList = stats
+                var rVector = RotateVector(mutableListOf(), dateFormat.format(mTimestamp))
+                rVector.angleList = mutableListOrientationAngles
 
                 fbDatabase = FirebaseDatabase.getInstance()
                 dbReference = fbDatabase.reference
-                dbReference.child("user").child(userKey).child("rotatevector").push().setValue(mutableListOrientationAngles)
+                dbReference.child("user").child(userKey).child("rotatevector").push().setValue(rVector)
                 dbReference.child("user").child(userKey).child("usagestatsCoroutine").push().setValue(usage)
+                dbReference.child("user").child(userKey).child("location").push().setValue(loc)
             }
 
 
@@ -128,7 +133,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
         Result.success()
     }
 
-    fun initLocationParms(){
+    fun initLocationParms() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(applicationContext)
         locationList = mutableListOf()
