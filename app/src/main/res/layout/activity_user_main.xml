@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:lineSpacingExtra="9sp"
             android:text="프로젝트 주제"
             android:textSize="20dp"
@@ -60,7 +60,8 @@
                 android:layout_gravity="bottom|end"
                 android:layout_marginLeft="45dp"
                 android:layout_marginBottom="10dp"
-                android:src="@drawable/data" />
+                android:src="@drawable/progress" />
+
         </LinearLayout>
 
 
@@ -85,46 +86,63 @@
             android:textColor="#a8000000"
             android:textSize="14dp"
             tools:text="프로젝트 가이드 다시보기" />
-
+<LinearLayout
+    android:gravity="bottom"
+    android:layout_gravity="bottom"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
         <TextView
+            android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="70dp"
             android:gravity="center_horizontal"
             android:lineSpacingExtra="8sp"
-            android:text="스트레스 설문을 놓치셨나요?\n
-▽"
+            android:text="스트레스 설문을 놓치셨나요?"
+            style="@style/TextStyleNormal"
             android:textColor="#000000"
-            android:textSize="17sp" />
-
+            android:textSize="18dp" />
+        <ImageView
+            android:layout_marginTop="14dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/download"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
         <Button
             android:id="@+id/button_survey"
             style="@style/TextStyleBold"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="40dp"
-            android:layout_marginVertical="35dp"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="60dp"
+            android:layout_marginVertical="25dp"
             android:layout_marginBottom="100dp"
             android:background="@drawable/button_radius"
             android:paddingHorizontal="15dp"
             android:text="스트레스 설문 시작하기"
             android:textColor="@android:color/white" />
-
-        <TextView
-            android:id="@+id/usercode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:gravity="right"
-            android:text="Usercode: M9gIFKPrwnFSMkk9zMo" />
+    </LinearLayout>
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_weight="3.5"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/usercode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:gravity="right"
+                android:text="Usercode: M9gIFKPrwnFSMkk9zMo" />
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="20dp"
-            android:layout_weight="1.1"
             android:background="#E3E1E1"
             android:orientation="vertical"
             android:padding="10dp">
@@ -134,19 +152,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="질문사항이 있으시다면?"
-                android:textSize="20dp"
+                android:textSize="17dp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="bottom"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="30sp"
-                    android:layout_marginTop="20sp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -155,10 +176,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
-                        android:layout_marginBottom="15dp"
+                        android:layout_marginBottom="6dp"
                         android:autoLink="all|phone"
-                        android:text="김지효\n+82-10-3531-6592\nksh04023@gmail.com"
-                        android:textSize="18dp" />
+                        android:text="김지효     +82-10-3531-6592"
+                        android:textSize="17dp" />
+
+                    <TextView
+                        style="@style/TextStyleNormal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="6dp"
+                        android:autoLink="all|phone"
+                        android:text="천세진     +82-10-3627-9038"
+                        android:textSize="17dp" />
 
                     <TextView
                         style="@style/TextStyleNormal"
@@ -167,29 +198,19 @@
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="15dp"
                         android:autoLink="all|phone"
-                        android:text="천세진\n+82-10-3627-9038\nsejinnnnnn@naver.com"
-                        android:textSize="18dp" />
-
-                    <TextView
-                        style="@style/TextStyleNormal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="15dp"
-                        android:autoLink="all|phone"
-                        android:text="조원빈\n+82-10-7507-0896\nlkic1625@gmail.com"
-                        android:textSize="18dp" />
+                        android:text="조원빈     +82-10-7507-0896"
+                        android:textSize="17dp" />
                 </LinearLayout>
 
                 <ImageView
+                    android:layout_gravity="end"
                     android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="80dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_height="80dp"
+                    android:layout_marginLeft="45dp"
                     android:src="@drawable/konkuk" />
             </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
+
 </LinearLayout>

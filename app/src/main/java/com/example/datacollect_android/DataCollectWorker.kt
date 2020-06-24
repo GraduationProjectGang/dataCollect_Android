@@ -94,7 +94,6 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
         //debug
         printCallStack()
 
-
         var stats = ArrayList<UsageStat>()
         stats = showAppUsageStats(getAppUsageStats(mTimestamp-900000))
 
