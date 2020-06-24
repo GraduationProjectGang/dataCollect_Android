@@ -135,9 +135,9 @@ class StressCollectActivity : AppCompatActivity() {
                 val edit = prefs.edit() as SharedPreferences.Editor
                 edit.putInt(getString(R.string.stress_collect_count), stCount + 1)
                 edit.commit()
-
+                finish()
             }
-            finish()
+
         }
     }
 
