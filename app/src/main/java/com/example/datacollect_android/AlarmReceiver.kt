@@ -17,6 +17,7 @@ import android.provider.Settings.System.getString
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
+import java.text.SimpleDateFormat
 import java.util.*
 
 class AlarmReceiver: BroadcastReceiver() {
@@ -57,9 +58,12 @@ class AlarmReceiver: BroadcastReceiver() {
         val cal = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
         var addtime = 0
         if (cal>22 || cal < 9) {
+            Log.d("alarmset","10")
             addtime = 10
         }else{
             addtime = 2
+            Log.d("alarmset","2")
+
         }
         setAlarm(context, addtime)
 
@@ -78,6 +82,8 @@ class AlarmReceiver: BroadcastReceiver() {
             PendingIntent.getBroadcast(context, addtime, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
+        val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
         alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,pendingIntent)
+        Log.d("alarmset at",dateFormat.format(calendar.timeInMillis))
     }
 }

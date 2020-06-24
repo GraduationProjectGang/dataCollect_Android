@@ -172,8 +172,9 @@ class StressCollectActivity : AppCompatActivity() {
                 val th = Thread(RR)
                 th.start()
 
+                finish()
             }
-            finish()
+
         }
     }
 

@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.SpannableString
@@ -50,7 +49,11 @@ class UserMainActivity : AppCompatActivity() {
 
         //WorkManager에 enqueue
         WorkManager.getInstance(applicationContext)
-            .enqueueUniquePeriodicWork(uniqueWorkName, ExistingPeriodicWorkPolicy.REPLACE, collectRequest)
+            .enqueueUniquePeriodicWork(
+                uniqueWorkName,
+                ExistingPeriodicWorkPolicy.REPLACE,
+                collectRequest
+            )
     }
 
     fun init() {
@@ -65,10 +68,13 @@ class UserMainActivity : AppCompatActivity() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
         usercode.text =
             "Usercode: " + prefs.getString(getString(R.string.pref_previously_logined), "null")
-        u_key =  prefs.getString(getString(R.string.pref_previously_logined), "null")!!
+        u_key = prefs.getString(getString(R.string.pref_previously_logined), "null")!!
 
 
-        Log.w("UMA_worker", prefs.getBoolean(getString(R.string.pref_previously_started), false).toString())
+        Log.w(
+            "UMA_worker",
+            prefs.getBoolean(getString(R.string.pref_previously_started), false).toString()
+        )
 
         if (!prefs.getBoolean(getString(R.string.pref_previously_started), false)) {
             var edit = prefs.edit() as SharedPreferences.Editor
@@ -85,8 +91,6 @@ class UserMainActivity : AppCompatActivity() {
         }
 
 
-
-
         // Set the alarm to start at approximately 2p.m. and 10p.m.
 
         val pm: PackageManager = this.packageManager
@@ -97,6 +101,7 @@ class UserMainActivity : AppCompatActivity() {
             PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
             PackageManager.DONT_KILL_APP
         );
+        
     }
 
     fun setAlarmAt(time: Int) {
