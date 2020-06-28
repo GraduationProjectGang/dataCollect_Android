@@ -16,10 +16,7 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.work.Constraints
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_stress_collect.*
 import kotlinx.coroutines.delay
@@ -172,16 +169,17 @@ class StressCollectActivity : AppCompatActivity() {
                 edit.putInt(getString(R.string.stress_collect_count), stCount + 1)
                 edit.commit()
 
-                val th = Thread(RotateRunnable(applicationContext))
-                th.start()
-               createWorker()//rotationVector
+//                val th = Thread(RotateRunnable(applicationContext))
+//                th.start()
+
+               createWorker(stCount,curTime)//rotationVector
 
                 finish()
             }
 
         }
     }
-    private fun createWorker() {//init Periodic work
+    private fun createWorker(index:Int, time:Long) {//init Periodic work
 
         val uniqueWorkName = "RVecWorker"
 
@@ -194,14 +192,18 @@ class StressCollectActivity : AppCompatActivity() {
             OneTimeWorkRequestBuilder<RVecWorker>()
                 .setConstraints(constraints)
                 .addTag("TAG")
-                .build()
+
+        var data = Data.Builder()
+        data.putInt("index",index)
+        data.putLong("time",time)
+        collectRequest.setInputData(data.build())
 
         //WorkManager에 enqueue
         WorkManager.getInstance(applicationContext)
             .enqueueUniqueWork(
                 uniqueWorkName,
                 ExistingWorkPolicy.KEEP,
-                collectRequest
+                collectRequest.build()
             )
     }
 
@@ -302,7 +304,7 @@ class StressCollectActivity : AppCompatActivity() {
 
             fbDatabase = FirebaseDatabase.getInstance()
             dbReference = fbDatabase.reference
-            dbReference.child("user").child(u_key).child("rotatevectorStress").push().setValue(rVector)
+//            dbReference.child("user").child(u_key).child("rotatevectorStress").push().setValue(rVector)
         }
 
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {

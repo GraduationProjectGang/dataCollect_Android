@@ -37,7 +37,6 @@ class RVecWorker(appContext: Context, workerParams: WorkerParameters)
     val TAG_USAGE = "usageTest"
     val userKey = u_key
 
-
     //rotate vector variable
     private lateinit var sensorManager: SensorManager
     private val accelerometerReading = FloatArray(3)
@@ -51,6 +50,8 @@ class RVecWorker(appContext: Context, workerParams: WorkerParameters)
     lateinit var fbDatabase: FirebaseDatabase
     var mTimestamp:Long = 0
     val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
+
+
 
     private fun printCallStack() {
         val sb = StringBuilder()
@@ -77,6 +78,9 @@ class RVecWorker(appContext: Context, workerParams: WorkerParameters)
         mTimestamp = System.currentTimeMillis()//공통으로 쓰일 timestamp
         fbDatabase = FirebaseDatabase.getInstance()
         dbReference = fbDatabase.reference
+        val index =  inputData?.getInt("index",0)
+        val time =  inputData?.getLong("time",System.currentTimeMillis())
+
         Log.d("stressRotation","stressRotation")
         //debug
         printCallStack()
@@ -90,7 +94,7 @@ class RVecWorker(appContext: Context, workerParams: WorkerParameters)
                 }
 
 
-                var rVector = RotateVector(mutableListOf(), dateFormat.format(mTimestamp))
+                var rVector = RotateVectorStress(mutableListOf(), dateFormat.format(mTimestamp), index,time)
                 rVector.angleList = mutableListOrientationAngles
 
                 fbDatabase = FirebaseDatabase.getInstance()
