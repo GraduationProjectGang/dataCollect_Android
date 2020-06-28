@@ -14,6 +14,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.work.CoroutineWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.*
@@ -28,18 +29,14 @@ import java.util.*
 import kotlin.Comparator
 import kotlin.collections.ArrayList
 
-class TestWorker(appContext: Context, workerParams: WorkerParameters)
-    : Worker(appContext, workerParams), SensorEventListener {
+class RVecWorker(appContext: Context, workerParams: WorkerParameters)
+    : CoroutineWorker(appContext, workerParams), SensorEventListener {
     val TAG_LOCATION = "LocationTest"
     val TAG_ROTATE = "rotateVectorTest"
     val TAG_COROUTINE = "coroutineWorkerTest"
     val TAG_USAGE = "usageTest"
+    val userKey = u_key
 
-    //location variable
-    private lateinit var locationRequest: LocationRequest
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationList: MutableList<Location>
-    private lateinit var locationCallback: LocationCallback
 
     //rotate vector variable
     private lateinit var sensorManager: SensorManager
@@ -52,6 +49,8 @@ class TestWorker(appContext: Context, workerParams: WorkerParameters)
     //firebase reference
     lateinit var dbReference: DatabaseReference
     lateinit var fbDatabase: FirebaseDatabase
+    var mTimestamp:Long = 0
+    val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
 
     private fun printCallStack() {
         val sb = StringBuilder()
@@ -73,91 +72,39 @@ class TestWorker(appContext: Context, workerParams: WorkerParameters)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result = coroutineScope {
         val iterationRange = 60
-
+        mTimestamp = System.currentTimeMillis()//공통으로 쓰일 timestamp
         fbDatabase = FirebaseDatabase.getInstance()
         dbReference = fbDatabase.reference
-
+        Log.d("stressRotation","stressRotation")
         //debug
         printCallStack()
-
-        showAppUsageStats(getAppUsageStats(System.currentTimeMillis() - 900000))
-
-        initLocationParms()
-        startLocationUpdates()
-
-
-
-        for (i in 1..iterationRange) {
-            //Repeat every 1s
-            Thread.sleep(1000L)
-            startMeasureRotateVector()
-            Log.d(TAG_COROUTINE, LocalDateTime.now().toString())
-        }
-        //stop location request when iteration was ended
-        stopLocationUpdates()
-
-
-
-
-        return Result.success()
-    }
-
-
-    private fun initLocationParms(){
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(applicationContext)
-        locationList = mutableListOf()
-        locationRequest = LocationRequest.create().apply {
-            interval = 20 * 1000
-            fastestInterval = 5 * 1000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                locationResult ?: return
-                for (location in locationResult.locations){
-                    locationList.add(location)
-                    Log.d(TAG_LOCATION,"(${location.latitude}, ${location.longitude})")
+        val jobs =
+            async {
+                for (i in 1 .. iterationRange){
+                    //Repeat every 1s
+                    delay(1000L)
+                    startMeasureRotateVector()
+                    Log.d(TAG_COROUTINE, LocalDateTime.now().toString())
                 }
+
+
+                var rVector = RotateVector(mutableListOf(), dateFormat.format(mTimestamp))
+                rVector.angleList = mutableListOrientationAngles
+
+                fbDatabase = FirebaseDatabase.getInstance()
+                dbReference = fbDatabase.reference
+                dbReference.child("user").child(userKey).child("rotationVecStress").push().setValue(rVector)
+                Log.d("rotationVecStress","pushed!!")
+
             }
-        }
-    }
-    fun getAppUsageStats(time:Long): MutableList<UsageStats> {
-        val cal = Calendar.getInstance()
-        cal.add(Calendar.MINUTE, -1)//1분간의 stats 파악
-        Log.d("calcal",cal.toString())
-
-        val usageStatsManager = applicationContext.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-        val queryUsageStats = usageStatsManager.queryUsageStats(
-            UsageStatsManager.INTERVAL_BEST,time, System.currentTimeMillis()
-        )
-
-        Log.d("appusing", queryUsageStats.size.toString())
-        return queryUsageStats
+        Result.success()
     }
 
-    fun showAppUsageStats(usageStats: MutableList<UsageStats>) {
 
-        val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
-        Log.d("appusing", usageStats.size.toString())
-        usageStats.sortWith(Comparator { right, left ->
-            compareValues(left.lastTimeUsed, right.lastTimeUsed)
-        })
-        var statsArr = ArrayList<UsageStat>()
 
-        usageStats.forEach {
-            if(it.lastTimeUsed>0){
-                statsArr.add(UsageStat(it.packageName,dateFormat.format(it.lastTimeUsed),it.totalTimeInForeground))
-                Log.d("appusing",statsArr.last().toString())
-            }
-        }
-        Log.d("appusing","statsArrLen: ${statsArr.size}")
-    }
-
-    private fun startMeasureRotateVector(){
+    private fun startMeasureRotateVector() {
 
         sensorManager = applicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
@@ -188,23 +135,6 @@ class TestWorker(appContext: Context, workerParams: WorkerParameters)
         Log.d(TAG_ROTATE, orientationAngles.contentToString())
         mutableListOrientationAngles.add(orientationAngles.contentToString())
 
-    }
-    private fun startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(applicationContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(applicationContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(applicationContext, android.Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED
-        ) {
-            Log.e(TAG_LOCATION, "permission get failed")
-            return
-        }
-
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper())
-    }
-    private fun stopLocationUpdates() {
-        fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
 

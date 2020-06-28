@@ -16,14 +16,17 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.fragment.app.FragmentManager
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_stress_collect.*
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.Comparator
 import kotlin.collections.ArrayList
 
@@ -171,11 +174,35 @@ class StressCollectActivity : AppCompatActivity() {
 
                 val th = Thread(RotateRunnable(applicationContext))
                 th.start()
+               createWorker()//rotationVector
 
                 finish()
             }
 
         }
+    }
+    private fun createWorker() {//init Periodic work
+
+        val uniqueWorkName = "RVecWorker"
+
+        val constraints = Constraints.Builder()
+            .setRequiresCharging(false)
+            .build()
+
+        //15분 마다 반복
+        val collectRequest =
+            OneTimeWorkRequestBuilder<RVecWorker>()
+                .setConstraints(constraints)
+                .addTag("TAG")
+                .build()
+
+        //WorkManager에 enqueue
+        WorkManager.getInstance(applicationContext)
+            .enqueueUniqueWork(
+                uniqueWorkName,
+                ExistingWorkPolicy.KEEP,
+                collectRequest
+            )
     }
 
     fun getAppUsageStats(time: Long): MutableList<UsageStats> {
