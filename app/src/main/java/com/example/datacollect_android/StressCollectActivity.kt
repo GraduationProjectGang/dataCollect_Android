@@ -106,59 +106,35 @@ class StressCollectActivity : AppCompatActivity() {
 
                 if (stCount == 0) {
                     val uArr = showAppUsageStats(getAppUsageStats(curTime - 9000000))
-                    val ucol = UsageStatsCollection(
-                        ArrayList(),
-                        stCount.toString(),
-                        curTime,
-                        dateFormat.format(curTime)
-                    )
+                    val ucol = UsageStatsCollection(ArrayList(), stCount.toString(), curTime, dateFormat.format(curTime))
                     ucol.statsList = uArr
                     dbReference.child("user").child(
-                        prefs.getString(
-                            getString(R.string.pref_previously_logined),
-                            "null"
-                        )!!
-                    ).child("usagestatsStress").push().setValue(ucol)
+                        prefs.getString(getString(R.string.pref_previously_logined), "null")!!).child("usagestatsStress").push().setValue(ucol)
                     val st = Stress_st(curTime.toString(), score.toString(), stCount.toString(), dateFormat.format(curTime))
                     dbReference.child("user").child(key!!).child("stress").push().setValue(st)
-                } else {
+                }
+                else {
                     dbReference.child("user").child(key!!).child("stress").orderByChild("index")
-                        .equalTo((stCount - 1).toString())
-                        .addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onCancelled(p0: DatabaseError) {
-                                Log.w("SCA_Error", p0.toString())
-                            }
+                        .equalTo((stCount - 1).toString()).addListenerForSingleValueEvent(object : ValueEventListener {
 
-                            override fun onDataChange(p0: DataSnapshot) {
-                                for (children in p0.children) {
-                                    Log.w("SCA_Usage", children.value.toString())
-                                    previousTime =
-                                        children.getValue(Stress_st::class.java)!!.timestamp.toLong()
-                                    Log.w("SCA_Stress", previousTime.toString())
-                                    val uArr = showAppUsageStats(getAppUsageStats(previousTime))
-                                    val ucol = UsageStatsCollection(
-                                        ArrayList(),
-                                        stCount.toString(),
-                                        curTime,
-                                        dateFormat.format(curTime)
-                                    )
-                                    ucol.statsList = uArr
-                                    dbReference.child("user").child(
-                                        prefs.getString(
-                                            getString(R.string.pref_previously_logined),
-                                            "null"
-                                        )!!
-                                    ).child("usagestatsStress").push().setValue(ucol)
-                                    val st = Stress_st(
-                                        curTime.toString(),
-                                        score.toString(),
-                                        stCount.toString(),
-                                        dateFormat.format(curTime)
-                                    )
-                                    dbReference.child("user").child(key!!).child("stress").push()
-                                        .setValue(st)
-                                }
+                        override fun onCancelled(p0: DatabaseError) {
+                            Log.w("SCA_Error", p0.toString())
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot) {
+                            for (children in p0.children) {
+                                Log.w("SCA_Usage", children.value.toString())
+                                previousTime = children.getValue(Stress_st::class.java)!!.timestamp.toLong()
+                                Log.w("SCA_Stress", previousTime.toString())
+                                val uArr = showAppUsageStats(getAppUsageStats(previousTime))
+                                val ucol = UsageStatsCollection(ArrayList(), stCount.toString(), curTime, dateFormat.format(curTime))
+                                ucol.statsList = uArr
+                                dbReference.child("user").child(prefs.getString(getString(R.string.pref_previously_logined), "null")!!)
+                                    .child("usagestatsStress").push().setValue(ucol)
+                                val st = Stress_st(curTime.toString(), score.toString(), stCount.toString(), dateFormat.format(curTime))
+                                dbReference.child("user").child(key!!).child("stress").push().setValue(st)
                             }
+                        }
 
                         })
 
@@ -169,9 +145,6 @@ class StressCollectActivity : AppCompatActivity() {
                 edit.putInt(getString(R.string.stress_collect_count), stCount + 1)
                 edit.commit()
 
-//                val th = Thread(RotateRunnable(applicationContext))
-//                th.start()
-
                createWorker(stCount,curTime)//rotationVector
 
                 finish()
@@ -179,6 +152,7 @@ class StressCollectActivity : AppCompatActivity() {
 
         }
     }
+
     private fun createWorker(index:Int, time:Long) {//init Periodic work
 
         val uniqueWorkName = "RVecWorker"
@@ -199,12 +173,7 @@ class StressCollectActivity : AppCompatActivity() {
         collectRequest.setInputData(data.build())
 
         //WorkManager에 enqueue
-        WorkManager.getInstance(applicationContext)
-            .enqueueUniqueWork(
-                uniqueWorkName,
-                ExistingWorkPolicy.KEEP,
-                collectRequest.build()
-            )
+        WorkManager.getInstance(applicationContext).enqueueUniqueWork(uniqueWorkName, ExistingWorkPolicy.KEEP, collectRequest.build())
     }
 
     fun getAppUsageStats(time: Long): MutableList<UsageStats> {
@@ -246,87 +215,6 @@ class StressCollectActivity : AppCompatActivity() {
         Log.d("appusing", "statsArrLen: ${statsArr.size}")
 
         return statsArr
-    }
-
-    class RotateRunnable(appContext: Context) : Runnable, SensorEventListener {
-
-        lateinit var sensorManager: SensorManager
-        val accelerometerReading = FloatArray(3)
-        val magnetometerReading = FloatArray(3)
-        val rotationMatrix = FloatArray(9)
-        val orientationAngles = FloatArray(3)
-        val mutableListOrientationAngles = mutableListOf<String>()
-        val aContext = appContext
-        val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
-
-        lateinit var fbDatabase: FirebaseDatabase
-        lateinit var dbReference: DatabaseReference
-
-        override fun run() {
-
-            for (i in 1..60) {
-                Log.w("sibal", 1.toString())
-                //Repeat every 1s
-                Thread.sleep(1000)
-                sensorManager =
-                    aContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
-                    sensorManager.registerListener(
-                        this,
-                        accelerometer,
-                        SensorManager.SENSOR_DELAY_NORMAL,
-                        SensorManager.SENSOR_DELAY_UI
-                    )
-                }
-                sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)?.also { magneticField ->
-                    sensorManager.registerListener(
-                        this,
-                        magneticField,
-                        SensorManager.SENSOR_DELAY_NORMAL,
-                        SensorManager.SENSOR_DELAY_UI
-                    )
-                }
-                SensorManager.getRotationMatrix(
-                    rotationMatrix,
-                    null,
-                    accelerometerReading,
-                    magnetometerReading
-                )
-                SensorManager.getOrientation(rotationMatrix, orientationAngles)
-                //print roll, pitch, yaw
-                //note that all three orientation angles are expressed in !!RADIANS!.
-                Log.d("RotationVector", orientationAngles.contentToString())
-                mutableListOrientationAngles.add(orientationAngles.contentToString())
-            }
-
-            var rVector = RotateVector(mutableListOf(), dateFormat.format(System.currentTimeMillis()))
-            rVector.angleList = mutableListOrientationAngles
-
-            fbDatabase = FirebaseDatabase.getInstance()
-            dbReference = fbDatabase.reference
-//            dbReference.child("user").child(u_key).child("rotatevectorStress").push().setValue(rVector)
-        }
-
-        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-
-        }
-
-        override fun onSensorChanged(event: SensorEvent?) {
-            if (event == null) return
-
-            if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
-                System.arraycopy(
-                    event.values,
-                    0,
-                    accelerometerReading,
-                    0,
-                    accelerometerReading.size
-                )
-            } else if (event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
-                System.arraycopy(event.values, 0, magnetometerReading, 0, magnetometerReading.size)
-            }
-        }
-
     }
 
 }

@@ -133,6 +133,8 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
             dbReference.child("user").child(userKey).child("isRunning").setValue("false")
         }
 
+
+
         Result.success()
     }
 

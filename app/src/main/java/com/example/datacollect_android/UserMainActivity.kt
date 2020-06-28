@@ -13,11 +13,9 @@ import android.preference.PreferenceManager
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.work.Constraints
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -60,17 +58,20 @@ class UserMainActivity : AppCompatActivity() {
 //            )
         val workManager = WorkManager.getInstance(applicationContext)
         workManager?.let {
-            it.enqueue(collectRequest)
-            val statusLiveData = it.getWorkInfoByIdLiveData(collectRequest.id)
+            it.enqueueUniquePeriodicWork(uniqueWorkName, ExistingPeriodicWorkPolicy.KEEP, collectRequest)
+            val statusLiveData = it.getWorkInfosForUniqueWorkLiveData(uniqueWorkName)
             statusLiveData.observe(this, androidx.lifecycle.Observer {
-                val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
-                Log.w("workstatus", "state: ${it.state}")
-                var edit = prefs.edit() as SharedPreferences.Editor
-                edit.putString(getString(R.string.worker_status), it.state.toString())
-                edit.commit()
-                Log.w("work_pref", prefs.getString(getString(R.string.worker_status), "null"))
+                Log.w("workstatus", "state: ${it[0].state}")
+                if (it[0].state == WorkInfo.State.BLOCKED || it[0].state == WorkInfo.State.CANCELLED || it[0].state == WorkInfo.State.FAILED) {
+                    createWorker()
+                }
             })
         }
+    }
+
+    fun cancelWork() {
+        val workManager = WorkManager.getInstance(applicationContext)
+        workManager.cancelAllWorkByTag("DCWorker")
     }
 
     fun init() {
@@ -101,20 +102,11 @@ class UserMainActivity : AppCompatActivity() {
             setAlarmAt(10)
             createWorker()
         }
-        else {
-            if (!(prefs.getString(getString(R.string.worker_status), "null") == "ENQUEUED" || prefs.getString(getString(R.string.worker_status), "null") == "RUNNING")) {
-                createWorker()
-            }
-            CheckWorkerRunning()
-        }
 
         button_survey.setOnClickListener {
             val intent = Intent(this, StressCollectActivity::class.java)
             startActivity(intent)
         }
-
-        Log.w("workerState", prefs.getString(getString(R.string.worker_status), "null"))
-
 
         // Set the alarm to start at approximately 2p.m. and 10p.m.
 
@@ -126,6 +118,18 @@ class UserMainActivity : AppCompatActivity() {
             PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
             PackageManager.DONT_KILL_APP
         );
+
+        var i = 0
+        emergency.setOnClickListener {
+            if (i == 0) {
+                Toast.makeText(this, "감사합니다! 크크", Toast.LENGTH_SHORT).show()
+                i++
+            }
+            else if (i > 0) {
+                createWorker()
+                Toast.makeText(this, "Worker Enqueued", Toast.LENGTH_SHORT).show()
+            }
+        }
 
     }
 
@@ -143,25 +147,6 @@ class UserMainActivity : AppCompatActivity() {
 
         alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,pendingIntent)
     }
-
-    fun CheckWorkerRunning() {
-        val fbDatabase = FirebaseDatabase.getInstance()
-        val dbReference = fbDatabase.reference
-
-        dbReference.child("user").child(u_key).child("isRunning").equalTo("false").addValueEventListener(object: ValueEventListener {
-
-            override fun onCancelled(p0: DatabaseError) {
-                Log.w("UserMain_isRunning", p0.toString())
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                createWorker()
-                dbReference.child("user").child(u_key).child("isRunning").setValue("true")
-            }
-
-        })
-    }
-
 
     class App : Application() {
         init {
