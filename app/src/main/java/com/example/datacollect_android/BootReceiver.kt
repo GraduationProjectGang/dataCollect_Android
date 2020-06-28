@@ -17,8 +17,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class BootReceiver : BroadcastReceiver() {
@@ -27,7 +32,6 @@ class BootReceiver : BroadcastReceiver() {
         setAlarmAt(context,10)
 
     }
-
 
     fun setAlarmAt(context:Context, time: Int) {
         val calendar: Calendar = Calendar.getInstance().apply {
@@ -43,6 +47,7 @@ class BootReceiver : BroadcastReceiver() {
 
         alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,pendingIntent)
     }
+
 
 }
 

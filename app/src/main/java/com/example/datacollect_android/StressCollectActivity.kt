@@ -119,7 +119,7 @@ class StressCollectActivity : AppCompatActivity() {
                             "null"
                         )!!
                     ).child("usagestatsStress").push().setValue(ucol)
-                    val st = Stress_st(curTime.toString(), score.toString(), stCount.toString())
+                    val st = Stress_st(curTime.toString(), score.toString(), stCount.toString(), dateFormat.format(curTime))
                     dbReference.child("user").child(key!!).child("stress").push().setValue(st)
                 } else {
                     dbReference.child("user").child(key!!).child("stress").orderByChild("index")
@@ -152,7 +152,8 @@ class StressCollectActivity : AppCompatActivity() {
                                     val st = Stress_st(
                                         curTime.toString(),
                                         score.toString(),
-                                        stCount.toString()
+                                        stCount.toString(),
+                                        dateFormat.format(curTime)
                                     )
                                     dbReference.child("user").child(key!!).child("stress").push()
                                         .setValue(st)
@@ -168,8 +169,7 @@ class StressCollectActivity : AppCompatActivity() {
                 edit.putInt(getString(R.string.stress_collect_count), stCount + 1)
                 edit.commit()
 
-                val RR = RotateRunnable(applicationContext)
-                val th = Thread(RR)
+                val th = Thread(RotateRunnable(applicationContext))
                 th.start()
 
                 finish()
@@ -236,6 +236,7 @@ class StressCollectActivity : AppCompatActivity() {
         override fun run() {
 
             for (i in 1..60) {
+                Log.w("sibal", 1.toString())
                 //Repeat every 1s
                 Thread.sleep(1000)
                 sensorManager =

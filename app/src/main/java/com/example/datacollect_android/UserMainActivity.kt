@@ -18,6 +18,10 @@ import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_user_main.*
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -44,16 +48,29 @@ class UserMainActivity : AppCompatActivity() {
         val collectRequest =
             PeriodicWorkRequestBuilder<DataCollectWorker>(15, TimeUnit.MINUTES)
                 .setConstraints(constraints)
-                .addTag("TAG")
+                .addTag("DCWorker")
                 .build()
 
         //WorkManager에 enqueue
-        WorkManager.getInstance(applicationContext)
-            .enqueueUniquePeriodicWork(
-                uniqueWorkName,
-                ExistingPeriodicWorkPolicy.REPLACE,
-                collectRequest
-            )
+//        WorkManager.getInstance(applicationContext)
+//            .enqueueUniquePeriodicWork(
+//                uniqueWorkName,
+//                ExistingPeriodicWorkPolicy.REPLACE,
+//                collectRequest
+//            )
+        val workManager = WorkManager.getInstance(applicationContext)
+        workManager?.let {
+            it.enqueue(collectRequest)
+            val statusLiveData = it.getWorkInfoByIdLiveData(collectRequest.id)
+            statusLiveData.observe(this, androidx.lifecycle.Observer {
+                val prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext())
+                Log.w("workstatus", "state: ${it.state}")
+                var edit = prefs.edit() as SharedPreferences.Editor
+                edit.putString(getString(R.string.worker_status), it.state.toString())
+                edit.commit()
+                Log.w("work_pref", prefs.getString(getString(R.string.worker_status), "null"))
+            })
+        }
     }
 
     fun init() {
@@ -84,11 +101,19 @@ class UserMainActivity : AppCompatActivity() {
             setAlarmAt(10)
             createWorker()
         }
+        else {
+            if (!(prefs.getString(getString(R.string.worker_status), "null") == "ENQUEUED" || prefs.getString(getString(R.string.worker_status), "null") == "RUNNING")) {
+                createWorker()
+            }
+            CheckWorkerRunning()
+        }
 
         button_survey.setOnClickListener {
             val intent = Intent(this, StressCollectActivity::class.java)
             startActivity(intent)
         }
+
+        Log.w("workerState", prefs.getString(getString(R.string.worker_status), "null"))
 
 
         // Set the alarm to start at approximately 2p.m. and 10p.m.
@@ -101,7 +126,7 @@ class UserMainActivity : AppCompatActivity() {
             PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
             PackageManager.DONT_KILL_APP
         );
-        
+
     }
 
     fun setAlarmAt(time: Int) {
@@ -117,6 +142,24 @@ class UserMainActivity : AppCompatActivity() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,pendingIntent)
+    }
+
+    fun CheckWorkerRunning() {
+        val fbDatabase = FirebaseDatabase.getInstance()
+        val dbReference = fbDatabase.reference
+
+        dbReference.child("user").child(u_key).child("isRunning").equalTo("false").addValueEventListener(object: ValueEventListener {
+
+            override fun onCancelled(p0: DatabaseError) {
+                Log.w("UserMain_isRunning", p0.toString())
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                createWorker()
+                dbReference.child("user").child(u_key).child("isRunning").setValue("true")
+            }
+
+        })
     }
 
 

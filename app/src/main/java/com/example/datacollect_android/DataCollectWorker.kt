@@ -123,14 +123,19 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
                 dbReference.child("user").child(userKey).child("rotatevector").push().setValue(rVector)
                 dbReference.child("user").child(userKey).child("usagestatsCoroutine").push().setValue(usage)
                 dbReference.child("user").child(userKey).child("location").push().setValue(loc)
+                dbReference.child("user").child(userKey).child("isRunning").setValue("true")
+
             }
 
-
-
-
+        if (isStopped) {
+            fbDatabase = FirebaseDatabase.getInstance()
+            dbReference = fbDatabase.reference
+            dbReference.child("user").child(userKey).child("isRunning").setValue("false")
+        }
 
         Result.success()
     }
+
 
     fun initLocationParms() {
 
