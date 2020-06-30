@@ -69,7 +69,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
     lateinit var mChannel : NotificationChannel
 
     private val notificationManager =
-        applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as
+        appContext.getSystemService(Context.NOTIFICATION_SERVICE) as
                 NotificationManager
 
     companion object var flag = false
@@ -95,6 +95,10 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
 
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun doWork(): Result = coroutineScope {
+
+        val progress = "데이터 전송 중"
+        setForeground(createForegroundInfo(progress))
+
         mTimestamp = System.currentTimeMillis()//공통으로 쓰일 timestamp
         val iterationRange = 60
 
@@ -132,17 +136,11 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
                 dbReference.child("user").child(userKey).child("location").push().setValue(loc)
                 dbReference.child("user").child(userKey).child("isRunning").setValue("true")
 
+                if (isStopped) {
+                    dbReference.child("user").child(userKey).child("isRunning").setValue("false")
+                }
+
             }
-
-        if (isStopped) {
-            fbDatabase = FirebaseDatabase.getInstance()
-            dbReference = fbDatabase.reference
-            dbReference.child("user").child(userKey).child("isRunning").setValue("false")
-        }
-
-        val progress = "데이터 전송 중"
-        setForeground(createForegroundInfo(progress))
-
 
         Result.success()
     }
@@ -155,10 +153,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
         Log.d("setForeground","started")
         // Create a Notification channel if necessary
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val mChannel = NotificationChannel(CHANNEL_ID, title, NotificationManager.IMPORTANCE_LOW)
-            mChannel.description = "데이터 전송 중"
-            notificationManager.createNotificationChannel(mChannel)
-            Log.d("setForeground","created")
+            createChannel(CHANNEL_ID, title, NotificationManager.IMPORTANCE_LOW)
         }
 
         val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
@@ -175,9 +170,11 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun createChannel(CHANNEL_ID:String, name:String, importance:Int){
-
-
+    fun createChannel(CHANNEL_ID:String, name:String, importance:Int) {
+        mChannel = NotificationChannel(CHANNEL_ID, name, importance)
+        mChannel.description = "데이터 전송 중"
+        notificationManager.createNotificationChannel(mChannel)
+        Log.d("setForeground","created")
     }
 
     fun initLocationParms() {

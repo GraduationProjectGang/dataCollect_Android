@@ -24,9 +24,6 @@ import kotlinx.android.synthetic.main.activity_user_main.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-lateinit var u_key: String
-
-
 class UserMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +62,9 @@ class UserMainActivity : AppCompatActivity() {
             statusLiveData.observe(this, androidx.lifecycle.Observer {
                 Log.w("workstatus", "state: ${it[0].state}")
                 if (it[0].state == WorkInfo.State.BLOCKED || it[0].state == WorkInfo.State.CANCELLED || it[0].state == WorkInfo.State.FAILED) {
-                    createWorker()
+                    val fbDatabase = FirebaseDatabase.getInstance()
+                    val dbReference = fbDatabase.reference
+                    dbReference.child("user").child(u_key).child("isRunning").setValue("false")
                 }
             })
         }
@@ -134,6 +133,8 @@ class UserMainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Worker Enqueued", Toast.LENGTH_SHORT).show()
             }
         }
+
+        createWorker()
 
     }
 
