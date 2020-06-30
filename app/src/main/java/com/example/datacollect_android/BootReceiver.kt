@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
@@ -41,11 +42,21 @@ class BootReceiver : BroadcastReceiver() {
         Log.d("alarmset","alarmsetat${time}")
         val alarmIntent = Intent(context, AlarmReceiver::class.java)
         alarmIntent.putExtra("time",time)
-        val pendingIntent =
-            PendingIntent.getBroadcast(context, time, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,pendingIntent)
+        val alarmUp = PendingIntent.getBroadcast(context, 10, alarmIntent,
+            PendingIntent.FLAG_NO_CREATE
+        ) != null
+
+        if (alarmUp) {
+            Log.d("myTag", "Alarm is already active")
+        }else{
+            Log.d("myTag", "Alarm doesn't exist")
+            val pendingIntent =
+                PendingIntent.getBroadcast(context, 10, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val alarmManager = context.getSystemService(ALARM_SERVICE) as AlarmManager
+            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,pendingIntent)
+        }
+
     }
 
 

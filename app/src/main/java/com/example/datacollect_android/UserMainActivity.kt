@@ -16,13 +16,13 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.*
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_user_main.*
 import java.util.*
 import java.util.concurrent.TimeUnit
+
+lateinit var u_key: String
+
 
 class UserMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -138,32 +138,28 @@ class UserMainActivity : AppCompatActivity() {
 
     }
 
-    fun setAlarmAt(time: Int) {
+    fun setAlarmAt(RequestCode: Int) {
         val calendar: Calendar = Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, time)
+            set(Calendar.HOUR_OF_DAY, RequestCode)
         }
-        Log.d("alarmset","main alarm set${time}")
+
+        Log.d("alarmset","main alarm set${RequestCode}")
         val alarmIntent = Intent(this, AlarmReceiver::class.java)
-        alarmIntent.putExtra("time",time)
-        val pendingIntent =
-            PendingIntent.getBroadcast(this, time, alarmIntent, PendingIntent.FLAG_NO_CREATE)
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmIntent.putExtra("time",RequestCode)
 
-        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,pendingIntent)
-    }
+        val alarmUp = PendingIntent.getBroadcast(this, RequestCode, alarmIntent,
+            PendingIntent.FLAG_NO_CREATE
+        ) != null
 
-    class App : Application() {
-        init {
-            instance = this
-        }
-
-        companion object {
-            private var instance: App? = null
-
-            fun context(): Context {
-                return instance!!.applicationContext
-            }
+        if (alarmUp) {
+            Log.d("myTag", "Alarm is already active")
+        }else{
+            Log.d("myTag", "Alarm doesn't exist")
+            val pendingIntent =
+                PendingIntent.getBroadcast(this, RequestCode, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,pendingIntent)
         }
     }
 }

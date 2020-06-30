@@ -79,7 +79,7 @@ class AlarmReceiver: BroadcastReceiver() {
         val alarmIntent = Intent(context, AlarmReceiver::class.java)
 //        alarmIntent.putExtra("time",addtime)
         val pendingIntent =
-            PendingIntent.getBroadcast(context, 10, alarmIntent, PendingIntent.FLAG_NO_CREATE)
+            PendingIntent.getBroadcast(context, 10, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
