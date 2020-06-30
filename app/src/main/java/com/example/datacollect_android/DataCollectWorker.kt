@@ -1,5 +1,7 @@
 package com.example.datacollect_android
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.Context
@@ -18,11 +20,10 @@ import android.provider.Settings.System.getString
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.ContextCompat.getSystemServiceName
-import androidx.work.CoroutineWorker
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import androidx.work.*
 import com.google.android.gms.location.*
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -64,6 +65,11 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
     lateinit var dbReference: DatabaseReference
     var mTimestamp:Long = 0
     val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
+    lateinit var mChannel : NotificationChannel
+
+    private val notificationManager =
+        applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as
+                NotificationManager
 
     companion object var flag = false
 
@@ -133,11 +139,43 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
             dbReference.child("user").child(userKey).child("isRunning").setValue("false")
         }
 
-
+        val progress = "데이터 전송 중"
+        setForeground(createForegroundInfo(progress))
 
         Result.success()
     }
 
+    private fun createForegroundInfo(progress:String):ForegroundInfo{
+        val CHANNEL_ID = "$applicationContext.packageName-${R.string.app_name}2"
+        val title = applicationContext.getString(R.string.channel_name)
+        // This PendingIntent can be used to cancel the worker
+
+        Log.d("setForeground","started")
+        // Create a Notification channel if necessary
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createChannel(CHANNEL_ID,title, NotificationManager.IMPORTANCE_LOW)
+        }
+
+        val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
+            .setContentTitle(title)
+            .setTicker(title)
+            .setContentText(progress)
+            .setSmallIcon(R.drawable.empty_swipe)
+            .setOngoing(true)
+            .build()
+        Log.d("setForeground","build")
+
+
+        return ForegroundInfo(100,notification)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun createChannel(CHANNEL_ID:String, name:String, importance:Int){
+        val mChannel = NotificationChannel(CHANNEL_ID, name, importance)
+        mChannel.description = "데이터 전송 중"
+        Log.d("setForeground","created")
+
+    }
 
     fun initLocationParms() {
 

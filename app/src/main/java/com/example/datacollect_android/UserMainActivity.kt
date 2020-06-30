@@ -49,6 +49,7 @@ class UserMainActivity : AppCompatActivity() {
                 .addTag("DCWorker")
                 .build()
 
+
         //WorkManager에 enqueue
 //        WorkManager.getInstance(applicationContext)
 //            .enqueueUniquePeriodicWork(
@@ -57,6 +58,7 @@ class UserMainActivity : AppCompatActivity() {
 //                collectRequest
 //            )
         val workManager = WorkManager.getInstance(applicationContext)
+
         workManager?.let {
             it.enqueueUniquePeriodicWork(uniqueWorkName, ExistingPeriodicWorkPolicy.KEEP, collectRequest)
             val statusLiveData = it.getWorkInfosForUniqueWorkLiveData(uniqueWorkName)

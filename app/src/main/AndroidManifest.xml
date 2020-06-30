@@ -15,7 +15,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_stressy"
         android:roundIcon="@mipmap/ic_stressy"
@@ -32,7 +34,10 @@
         <activity android:name=".UserMainActivity">
 
         </activity>
-
+        <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="${applicationId}.workmanager-init"
+            tools:node="remove" />
         <receiver
             android:name=".BootReceiver"
             android:enabled="true"
