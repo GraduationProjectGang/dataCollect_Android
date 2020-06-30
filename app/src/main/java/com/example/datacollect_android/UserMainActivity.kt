@@ -59,16 +59,21 @@ class UserMainActivity : AppCompatActivity() {
 //            )
         val workManager = WorkManager.getInstance(applicationContext)
 
-        workManager?.let {
-            it.enqueueUniquePeriodicWork(uniqueWorkName, ExistingPeriodicWorkPolicy.KEEP, collectRequest)
-            val statusLiveData = it.getWorkInfosForUniqueWorkLiveData(uniqueWorkName)
-            statusLiveData.observe(this, androidx.lifecycle.Observer {
-                Log.w("workstatus", "state: ${it[0].state}")
-                if (it[0].state == WorkInfo.State.BLOCKED || it[0].state == WorkInfo.State.CANCELLED || it[0].state == WorkInfo.State.FAILED) {
-                    createWorker()
-                }
-            })
-        }
+        //그냥 이렇게 하면안되나
+        workManager.enqueueUniquePeriodicWork(uniqueWorkName,ExistingPeriodicWorkPolicy.KEEP,collectRequest)
+
+
+//        workManager?.let {
+//            it.enqueueUniquePeriodicWork(uniqueWorkName, ExistingPeriodicWorkPolicy.KEEP, collectRequest)
+//            val statusLiveData = it.getWorkInfosForUniqueWorkLiveData(uniqueWorkName)
+//            statusLiveData.observe(this, androidx.lifecycle.Observer {
+//                Log.w("workstatus", "state: ${it[0].state}")
+//                if (it[0].state == WorkInfo.State.BLOCKED || it[0].state == WorkInfo.State.CANCELLED || it[0].state == WorkInfo.State.FAILED) {
+//                    createWorker()
+//                }
+//            })
+//        }
+
     }
 
     fun cancelWork() {
