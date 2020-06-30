@@ -149,7 +149,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
 
     private fun createForegroundInfo(progress:String):ForegroundInfo{
         val CHANNEL_ID = "$applicationContext.packageName-${R.string.app_name}"
-        val title = applicationContext.getString(R.string.channel_name)
+        val title = "사용자 데이터 수집"
         // This PendingIntent can be used to cancel the worker
 
         Log.d("setForeground","started")

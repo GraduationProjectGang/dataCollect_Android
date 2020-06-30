@@ -77,9 +77,9 @@ class AlarmReceiver: BroadcastReceiver() {
         }
         Log.d("alarmset","receiver alarm set${addtime}")
         val alarmIntent = Intent(context, AlarmReceiver::class.java)
-        alarmIntent.putExtra("time",addtime)
+//        alarmIntent.putExtra("time",addtime)
         val pendingIntent =
-            PendingIntent.getBroadcast(context, addtime, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getBroadcast(context, 10, alarmIntent, PendingIntent.FLAG_NO_CREATE)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")

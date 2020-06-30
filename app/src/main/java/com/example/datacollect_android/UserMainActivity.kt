@@ -106,9 +106,11 @@ class UserMainActivity : AppCompatActivity() {
             edit.putBoolean(getString(R.string.pref_previously_started), true)
             edit.commit()
 
-            setAlarmAt(10)
+
             createWorker()
         }
+
+        setAlarmAt(10)
 
         button_survey.setOnClickListener {
             val intent = Intent(this, StressCollectActivity::class.java)
@@ -149,7 +151,7 @@ class UserMainActivity : AppCompatActivity() {
         val alarmIntent = Intent(this, AlarmReceiver::class.java)
         alarmIntent.putExtra("time",time)
         val pendingIntent =
-            PendingIntent.getBroadcast(this, time, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getBroadcast(this, time, alarmIntent, PendingIntent.FLAG_NO_CREATE)
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,pendingIntent)
