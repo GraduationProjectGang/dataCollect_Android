@@ -21,9 +21,6 @@ import kotlinx.android.synthetic.main.activity_user_main.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-lateinit var u_key: String
-
-
 class UserMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
