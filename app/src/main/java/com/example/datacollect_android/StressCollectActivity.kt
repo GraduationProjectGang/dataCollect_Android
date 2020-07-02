@@ -3,6 +3,7 @@ package com.example.datacollect_android
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -145,7 +146,10 @@ class StressCollectActivity : AppCompatActivity() {
                 edit.putInt(getString(R.string.stress_collect_count), stCount + 1)
                 edit.commit()
 
-               createWorker(stCount,curTime)//rotationVector
+//               createWorker(stCount,curTime)//rotationVector
+
+                val intent = Intent(this, UserMainActivity::class.java)
+                startActivity(intent)
 
                 finish()
             }
