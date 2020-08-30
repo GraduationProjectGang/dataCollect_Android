@@ -1,23 +1,17 @@
-package com.example.datacollect_android
+package com.example.datacollect_android.etc
 
-import android.app.usage.UsageStats
-import android.app.usage.UsageStatsManager
 import android.content.Context
-import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.location.Location
 import android.os.Build
-import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
 import androidx.work.CoroutineWorker
-import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.google.android.gms.location.*
+import com.example.datacollect_android.activity.u_key
+import com.example.datacollect_android.data_class.RotateVectorStress
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.async
@@ -25,9 +19,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
-import java.util.*
-import kotlin.Comparator
-import kotlin.collections.ArrayList
 
 class RVecWorker(appContext: Context, workerParams: WorkerParameters)
     : CoroutineWorker(appContext, workerParams), SensorEventListener {
@@ -94,7 +85,13 @@ class RVecWorker(appContext: Context, workerParams: WorkerParameters)
                 }
 
 
-                var rVector = RotateVectorStress(mutableListOf(), dateFormat.format(mTimestamp), index,time)
+                var rVector =
+                    RotateVectorStress(
+                        mutableListOf(),
+                        dateFormat.format(mTimestamp),
+                        index,
+                        time
+                    )
                 rVector.angleList = mutableListOrientationAngles
 
                 fbDatabase = FirebaseDatabase.getInstance()

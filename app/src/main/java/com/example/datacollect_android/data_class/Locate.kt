@@ -1,4 +1,4 @@
-package com.example.datacollect_android
+package com.example.datacollect_android.data_class
 
 import android.location.Location
 

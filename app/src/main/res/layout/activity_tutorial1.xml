@@ -7,7 +7,7 @@
     android:layout_gravity="center_horizontal"
     android:orientation="vertical"
     android:id="@+id/tutorial1"
-    tools:context=".Tutorial1Activity">
+    tools:context=".activity.Tutorial1Activity">
 
 <LinearLayout
     android:layout_width="match_parent"

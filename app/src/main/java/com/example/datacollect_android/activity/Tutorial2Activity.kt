@@ -1,8 +1,9 @@
-package com.example.datacollect_android
+package com.example.datacollect_android.activity
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.datacollect_android.R
 import kotlinx.android.synthetic.main.activity_tutorial2.*
 
 class Tutorial2Activity : AppCompatActivity() {
@@ -11,7 +12,8 @@ class Tutorial2Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutorial2)
         nextButton2.setOnClickListener {
-            val intent = Intent(this,Tutorial3Activity::class.java)
+            val intent = Intent(this,
+                Tutorial3Activity::class.java)
             startActivity(intent)
             overridePendingTransition(0, 0)
             finish()

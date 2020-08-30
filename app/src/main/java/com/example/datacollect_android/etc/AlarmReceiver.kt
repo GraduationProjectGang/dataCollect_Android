@@ -1,22 +1,16 @@
-package com.example.datacollect_android
+package com.example.datacollect_android.etc
 
-import android.annotation.SuppressLint
 import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Context.*
 import android.content.Intent
 import android.os.Build
-import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity.NOTIFICATION_SERVICE
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
-import com.example.datacollect_android.R.string.channel_description as channel_description1
-import android.provider.Settings.System.getString
 import android.util.Log
-import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
+import com.example.datacollect_android.R
+import com.example.datacollect_android.activity.StressCollectActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -28,7 +22,8 @@ class AlarmReceiver: BroadcastReceiver() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = R.string.channel_name
-            val descriptionText = R.string.channel_description
+            val descriptionText =
+                R.string.channel_description
             val importance = NotificationManager.IMPORTANCE_HIGH
             val mChannel = NotificationChannel(CHANNEL_ID, name.toString(), importance)
             mChannel.description = descriptionText.toString()

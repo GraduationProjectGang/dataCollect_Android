@@ -1,15 +1,13 @@
-package com.example.datacollect_android
+package com.example.datacollect_android.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
-import kotlinx.android.synthetic.main.activity_tutorial2.*
+import com.example.datacollect_android.fragment.PopUpFragment
+import com.example.datacollect_android.R
 import kotlinx.android.synthetic.main.activity_tutorial3.*
-import kotlinx.android.synthetic.main.activity_user_main.*
 
 class Tutorial3Activity : AppCompatActivity() {
 

@@ -1,4 +1,4 @@
-package com.example.datacollect_android
+package com.example.datacollect_android.etc
 
 import android.app.Application
 import androidx.work.Configuration

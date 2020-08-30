@@ -1,11 +1,10 @@
-package com.example.datacollect_android
+package com.example.datacollect_android.etc
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -14,22 +13,21 @@ import android.hardware.SensorManager
 import android.location.Location
 import android.os.Build
 import android.os.Looper
-import android.os.PowerManager
-import android.preference.PreferenceManager
-import android.provider.Settings.System.getString
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.ContextCompat.getSystemServiceName
 import androidx.work.*
+import com.example.datacollect_android.R
+import com.example.datacollect_android.activity.u_key
+import com.example.datacollect_android.data_class.Locate
+import com.example.datacollect_android.data_class.RotateVector
+import com.example.datacollect_android.data_class.UsageStat
+import com.example.datacollect_android.data_class.UsageStatsCollection
 import com.google.android.gms.location.*
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.*
-import java.lang.Thread.sleep
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
@@ -122,11 +120,24 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
                 //stop location request when iteration was ended
                 stopLocationUpdates()
 
-                var loc = Locate(mutableListOf(), dateFormat.format(mTimestamp))
+                var loc = Locate(
+                    mutableListOf(),
+                    dateFormat.format(mTimestamp)
+                )
                 loc.locationList = locationList
-                var usage = UsageStatsCollection(ArrayList(), "coroutine", mTimestamp, dateFormat.format(mTimestamp))
+                var usage =
+                    UsageStatsCollection(
+                        ArrayList(),
+                        "coroutine",
+                        mTimestamp,
+                        dateFormat.format(mTimestamp)
+                    )
                 usage.statsList = stats
-                var rVector = RotateVector(mutableListOf(), dateFormat.format(mTimestamp))
+                var rVector =
+                    RotateVector(
+                        mutableListOf(),
+                        dateFormat.format(mTimestamp)
+                    )
                 rVector.angleList = mutableListOrientationAngles
 
                 fbDatabase = FirebaseDatabase.getInstance()
@@ -222,7 +233,13 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
 
         usageStats.forEach {
             if(it.totalTimeInForeground>0 && it.lastTimeUsed>mTimestamp-900000){
-                statsArr.add(UsageStat(it.packageName, dateFormat.format(it.lastTimeUsed), it.totalTimeInForeground))
+                statsArr.add(
+                    UsageStat(
+                        it.packageName,
+                        dateFormat.format(it.lastTimeUsed),
+                        it.totalTimeInForeground
+                    )
+                )
                 Log.d("appusing",statsArr.last().toString())
             }
         }

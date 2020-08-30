@@ -1,4 +1,4 @@
-package com.example.datacollect_android
+package com.example.datacollect_android.activity
 
 import android.app.*
 import android.app.usage.UsageStats
@@ -7,35 +7,23 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.hardware.Sensor
-import android.hardware.SensorManager
-import android.hardware.TriggerEvent
-import android.hardware.TriggerEventListener
-import android.os.Build
 import android.os.Bundle
-import android.os.SystemClock
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.work.Constraints
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import com.example.datacollect_android.*
+import com.example.datacollect_android.data_class.UsageStat
+import com.example.datacollect_android.etc.BootReceiver
 
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.Comparator
 import kotlin.collections.ArrayList
 
@@ -213,7 +201,13 @@ class MainActivity : AppCompatActivity() {
 
         usageStats.forEach {
             if(it.lastTimeUsed>0){
-                statsArr.add(UsageStat(it.packageName, dateFormat.format(it.lastTimeUsed), it.totalTimeInForeground))
+                statsArr.add(
+                    UsageStat(
+                        it.packageName,
+                        dateFormat.format(it.lastTimeUsed),
+                        it.totalTimeInForeground
+                    )
+                )
                 Log.d("appusing",statsArr.last().toString())
             }
         }

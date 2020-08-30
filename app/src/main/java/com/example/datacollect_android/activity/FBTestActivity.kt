@@ -1,7 +1,8 @@
-package com.example.datacollect_android
+package com.example.datacollect_android.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.datacollect_android.R
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_fbtest.*
