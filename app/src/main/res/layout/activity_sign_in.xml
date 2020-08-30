@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".SignInActivity"
+    tools:context=".activity.SignInActivity"
     android:id="@+id/sv_root">
     <LinearLayout
         android:layout_margin="10dp"
@@ -126,10 +126,10 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textColor="@android:color/black"
-                android:text="학년"
+                android:text="나이"
                 />
-            <Spinner
-                android:id="@+id/user_grade"
+            <EditText
+                android:id="@+id/user_age"
                 style="@style/TextStyleBold"
                 android:layout_width="0dp"
                 android:layout_weight="1.5"

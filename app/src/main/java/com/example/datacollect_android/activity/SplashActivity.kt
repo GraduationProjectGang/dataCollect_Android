@@ -1,10 +1,11 @@
-package com.example.datacollect_android
+package com.example.datacollect_android.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
+import com.example.datacollect_android.R
 
 lateinit var u_key: String
 
@@ -28,7 +29,8 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             else {
-                startActivity(Intent(this,UserMainActivity::class.java))
+                startActivity(Intent(this,
+                    UserMainActivity::class.java))
             }
 
 

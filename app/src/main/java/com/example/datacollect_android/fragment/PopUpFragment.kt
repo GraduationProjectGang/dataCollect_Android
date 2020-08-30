@@ -1,29 +1,21 @@
-package com.example.datacollect_android
+package com.example.datacollect_android.fragment
 
-import android.app.ActionBar
+import android.app.AlertDialog
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.provider.Settings
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.WindowManager
+import android.view.*
 import android.widget.Button
-import android.widget.LinearLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.example.datacollect_android.R
+import com.example.datacollect_android.activity.UserMainActivity
 import kotlinx.android.synthetic.main.fragment_pop_up.*
 import java.lang.Thread.sleep
 
@@ -39,8 +31,10 @@ private const val ARG_PARAM2 = "param2"
  */
 class PopUpFragment : DialogFragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    var granted = false
+    val appOps = activity!!.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+    val mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,android.os.Process.myUid(), activity!!.getPackageName());
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +46,10 @@ class PopUpFragment : DialogFragment() {
         val rootView = inflater.inflate(R.layout.fragment_pop_up, container, false)
         val button_permit = rootView.findViewById<Button>(R.id.button_permit)
         button_permit.setOnClickListener {
-            initUsageStats()
+            if (button_permit.text == "다음" )
+                //TODO
+            else
+                initUsageStats()
         }
         return rootView
     }
@@ -68,26 +65,27 @@ class PopUpFragment : DialogFragment() {
     override fun onPause() {
         super.onPause()
         sleep(1000)
-        button_permit.text = "다음"
+
+        if (mode == AppOpsManager.MODE_DEFAULT) {
+            granted = (activity!!.checkCallingOrSelfPermission(android.Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED)
+        } else {
+            granted = (mode == AppOpsManager.MODE_ALLOWED)
+        }
+
+        if (granted == true){
+            // 권한이 없을 경우 권한 요구 페이지 이동
+            button_permit.text = "다음"
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog?.setTitle("권한요청")
-
-        init()
-
-    }
-    fun init(){
-        Log.d("frag","init")
     }
 
     private fun initUsageStats() {
         val TAG = "usageStats"
-        var granted = false
-        val appOps = activity!!.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
-        val mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,android.os.Process.myUid(), activity!!.getPackageName());
 
         if (mode == AppOpsManager.MODE_DEFAULT) {
             granted = (activity!!.checkCallingOrSelfPermission(android.Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED);
@@ -105,22 +103,6 @@ class PopUpFragment : DialogFragment() {
             val intent = Intent(context, UserMainActivity::class.java)
             startActivity(intent)
             activity!!.finish()
-
         }
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment PopUpFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance() =
-            PopUpFragment()
     }
 }

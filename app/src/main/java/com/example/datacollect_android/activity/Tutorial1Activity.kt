@@ -1,4 +1,4 @@
-package com.example.datacollect_android
+package com.example.datacollect_android.activity
 
 import android.content.Context
 import android.content.Intent
@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_tutorial1.*
 import android.provider.Settings
+import com.example.datacollect_android.R
 
 
 class Tutorial1Activity : AppCompatActivity() {
@@ -49,7 +50,8 @@ class Tutorial1Activity : AppCompatActivity() {
 
 
         nextButton1.setOnClickListener {
-            val intent = Intent(this,Tutorial2Activity::class.java) //다음이어질 액티비티
+            val intent = Intent(this,
+                Tutorial2Activity::class.java) //다음이어질 액티비티
             startActivity(intent)
             overridePendingTransition(0, 0)
             finish()

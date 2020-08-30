@@ -1,7 +1,6 @@
-package com.example.datacollect_android
+package com.example.datacollect_android.activity
 
 import android.app.AlarmManager
-import android.app.Application
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
@@ -16,6 +15,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.*
+import com.example.datacollect_android.etc.AlarmReceiver
+import com.example.datacollect_android.etc.BootReceiver
+import com.example.datacollect_android.etc.DataCollectWorker
+import com.example.datacollect_android.R
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_user_main.*
 import java.util.*

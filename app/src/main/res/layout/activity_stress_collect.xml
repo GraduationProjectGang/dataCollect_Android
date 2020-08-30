@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:scrollbarAlwaysDrawVerticalTrack="true"
     android:scrollbarSize="10dp"
-    tools:context=".StressCollectActivity">
+    tools:context=".activity.StressCollectActivity">
     <ImageView
         android:layout_marginTop="10dp"
         android:src="@drawable/text_logo"

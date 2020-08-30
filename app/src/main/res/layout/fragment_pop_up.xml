@@ -8,7 +8,7 @@
     android:layout_marginHorizontal="10dp"
     android:layout_gravity="center"
     android:background="@drawable/button_radius_gray"
-    tools:context=".PopUpFragment">
+    tools:context=".fragment.PopUpFragment">
 
     <TextView
         android:layout_marginTop="10dp"

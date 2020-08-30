@@ -1,14 +1,10 @@
-package com.example.datacollect_android
+package com.example.datacollect_android.activity
 
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -18,13 +14,16 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.*
+import com.example.datacollect_android.R
+import com.example.datacollect_android.data_class.Stress_st
+import com.example.datacollect_android.data_class.UsageStat
+import com.example.datacollect_android.data_class.UsageStatsCollection
+import com.example.datacollect_android.etc.RVecWorker
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_stress_collect.*
-import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.Comparator
 import kotlin.collections.ArrayList
 
@@ -107,11 +106,23 @@ class StressCollectActivity : AppCompatActivity() {
 
                 if (stCount == 0) {
                     val uArr = showAppUsageStats(getAppUsageStats(curTime - 9000000))
-                    val ucol = UsageStatsCollection(ArrayList(), stCount.toString(), curTime, dateFormat.format(curTime))
+                    val ucol =
+                        UsageStatsCollection(
+                            ArrayList(),
+                            stCount.toString(),
+                            curTime,
+                            dateFormat.format(curTime)
+                        )
                     ucol.statsList = uArr
                     dbReference.child("user").child(
                         prefs.getString(getString(R.string.pref_previously_logined), "null")!!).child("usagestatsStress").push().setValue(ucol)
-                    val st = Stress_st(curTime.toString(), score.toString(), stCount.toString(), dateFormat.format(curTime))
+                    val st =
+                        Stress_st(
+                            curTime.toString(),
+                            score.toString(),
+                            stCount.toString(),
+                            dateFormat.format(curTime)
+                        )
                     dbReference.child("user").child(key!!).child("stress").push().setValue(st)
                 }
                 else {
@@ -128,11 +139,25 @@ class StressCollectActivity : AppCompatActivity() {
                                 previousTime = children.getValue(Stress_st::class.java)!!.timestamp.toLong()
                                 Log.w("SCA_Stress", previousTime.toString())
                                 val uArr = showAppUsageStats(getAppUsageStats(previousTime))
-                                val ucol = UsageStatsCollection(ArrayList(), stCount.toString(), curTime, dateFormat.format(curTime))
+                                val ucol =
+                                    UsageStatsCollection(
+                                        ArrayList(),
+                                        stCount.toString(),
+                                        curTime,
+                                        dateFormat.format(curTime)
+                                    )
                                 ucol.statsList = uArr
-                                dbReference.child("user").child(prefs.getString(getString(R.string.pref_previously_logined), "null")!!)
+                                dbReference.child("user").child(prefs.getString(getString(
+                                    R.string.pref_previously_logined
+                                ), "null")!!)
                                     .child("usagestatsStress").push().setValue(ucol)
-                                val st = Stress_st(curTime.toString(), score.toString(), stCount.toString(), dateFormat.format(curTime))
+                                val st =
+                                    Stress_st(
+                                        curTime.toString(),
+                                        score.toString(),
+                                        stCount.toString(),
+                                        dateFormat.format(curTime)
+                                    )
                                 dbReference.child("user").child(key!!).child("stress").push().setValue(st)
                             }
                         }

@@ -1,4 +1,4 @@
-package com.example.datacollect_android
+package com.example.datacollect_android.etc
 
 import android.graphics.Rect
 import android.view.ViewTreeObserver
