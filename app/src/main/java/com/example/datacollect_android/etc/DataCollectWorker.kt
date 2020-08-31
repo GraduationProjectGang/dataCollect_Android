@@ -2,8 +2,10 @@ package com.example.datacollect_android.etc
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.Service
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.Sensor
@@ -49,7 +51,7 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
     //location variable
     private lateinit var locationRequest: LocationRequest
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationList:MutableList<Location>
+    private lateinit var locationList: MutableList<Location>
     private lateinit var locationCallback: LocationCallback
 
     //rotate vector variable
@@ -62,17 +64,19 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
 
     lateinit var fbDatabase: FirebaseDatabase
     lateinit var dbReference: DatabaseReference
-    var mTimestamp:Long = 0
+    var mTimestamp: Long = 0
     val dateFormat = SimpleDateFormat("yyyyMMdd.HH:mm:ss")
-    lateinit var mChannel : NotificationChannel
+    lateinit var mChannel: NotificationChannel
 
     private val notificationManager =
         appContext.getSystemService(Context.NOTIFICATION_SERVICE) as
                 NotificationManager
 
-    companion object var flag = false
+    companion object
 
-    private fun printCallStack(){
+    var flag = false
+
+    private fun printCallStack() {
         val sb = StringBuilder()
         sb.append("==================================\n  CALL STACK\n==================================\n");
 
@@ -91,71 +95,87 @@ class DataCollectWorker(appContext: Context, workerParams: WorkerParameters)
         Log.d("test", sb.toString());
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun doWork(): Result = coroutineScope {
 
-        val progress = "데이터 전송 중"
-        setForeground(createForegroundInfo(progress))
+    override suspend fun doWork(): Result {
+        return coroutineScope {
 
-        mTimestamp = System.currentTimeMillis()//공통으로 쓰일 timestamp
-        val iterationRange = 60
+            val progress = "데이터 전송 중"
+            setForeground(createForegroundInfo(progress))
 
-        //debug
-        printCallStack()
+            mTimestamp = System.currentTimeMillis()//공통으로 쓰일 timestamp
+            val iterationRange = 60
 
-        var stats = ArrayList<UsageStat>()
-        stats = showAppUsageStats(getAppUsageStats(mTimestamp-900000))
+            //debug
+            printCallStack()
 
-        initLocationParms()
-        startLocationUpdates()
+            var stats = ArrayList<UsageStat>()
+            stats = showAppUsageStats(getAppUsageStats(mTimestamp - 900000))
 
-        val jobs =
-            async {
-                for (i in 1 .. iterationRange){
-                    //Repeat every 1s
-                    delay(1000L)
-                    startMeasureRotateVector()
-                    Log.d(TAG_COROUTINE, LocalDateTime.now().toString())
-                }
-                //stop location request when iteration was ended
-                stopLocationUpdates()
+            initLocationParms()
+            startLocationUpdates()
 
-                var loc = Locate(
-                    mutableListOf(),
-                    dateFormat.format(mTimestamp)
-                )
-                loc.locationList = locationList
-                var usage =
-                    UsageStatsCollection(
-                        ArrayList(),
-                        "coroutine",
-                        mTimestamp,
-                        dateFormat.format(mTimestamp)
-                    )
-                usage.statsList = stats
-                var rVector =
-                    RotateVector(
-                        mutableListOf(),
-                        dateFormat.format(mTimestamp)
-                    )
-                rVector.angleList = mutableListOrientationAngles
-
-                fbDatabase = FirebaseDatabase.getInstance()
-                dbReference = fbDatabase.reference
-                dbReference.child("user").child(userKey).child("rotatevector").push().setValue(rVector)
-                dbReference.child("user").child(userKey).child("usagestatsCoroutine").push().setValue(usage)
-                dbReference.child("user").child(userKey).child("location").push().setValue(loc)
-                dbReference.child("user").child(userKey).child("isRunning").setValue("true")
-
-                if (isStopped) {
-                    dbReference.child("user").child(userKey).child("isRunning").setValue("false")
-                }
-
+            val job = async {
+                asyncWork(iterationRange, stats)
             }
 
-        Result.success()
+            job.invokeOnCompletion { exception: Throwable? ->
+                when (exception) {
+                    is CancellationException -> {
+                        Log.e(TAG, "Cleanup on completion", exception)
+                        // cleanup on cancellations
+                    }
+                    else -> {
+                        // do something else.
+                    }
+                }
+            }
+
+            job.await()
+        }
     }
 
+    suspend fun asyncWork(iterationRange: Int, stats: ArrayList<UsageStat>): Result {
+        for (i in 1..iterationRange) {
+            //Repeat every 1s
+            delay(1000L)
+            startMeasureRotateVector()
+
+        }
+        //stop location request when iteration was ended
+        stopLocationUpdates()
+
+        var loc = Locate(
+            mutableListOf(),
+            dateFormat.format(mTimestamp)
+        )
+        loc.locationList = locationList
+        var usage =
+            UsageStatsCollection(
+                ArrayList(),
+                "coroutine",
+                mTimestamp,
+                dateFormat.format(mTimestamp)
+            )
+        usage.statsList = stats
+        var rVector =
+            RotateVector(
+                mutableListOf(),
+                dateFormat.format(mTimestamp)
+            )
+        rVector.angleList = mutableListOrientationAngles
+
+        fbDatabase = FirebaseDatabase.getInstance()
+        dbReference = fbDatabase.reference
+        dbReference.child("user").child(userKey).child("rotatevector").push().setValue(rVector)
+        dbReference.child("user").child(userKey).child("usagestatsCoroutine").push().setValue(usage)
+        dbReference.child("user").child(userKey).child("location").push().setValue(loc)
+        dbReference.child("user").child(userKey).child("isRunning").setValue("true")
+
+        if (isStopped) {
+            dbReference.child("user").child(userKey).child("isRunning").setValue("false")
+        }
+        return Result.success()
+    }
     private fun createForegroundInfo(progress:String):ForegroundInfo{
         val CHANNEL_ID = "$applicationContext.packageName-${R.string.app_name}"
         val title = "사용자 데이터 수집"

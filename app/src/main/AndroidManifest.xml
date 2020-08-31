@@ -25,11 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.SplashActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".activity.UserMainActivity">
 
@@ -59,7 +55,13 @@
         <activity android:name=".activity.SignInActivity"></activity>
         <activity android:name=".activity.FBTestActivity" />
         <activity android:name=".activity.StressCollectActivity" />
-        <activity android:name=".activity.Tutorial3Activity" />
+        <activity android:name=".activity.Tutorial3Activity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activity.Tutorial2Activity" />
         <activity android:name=".activity.Tutorial1Activity" />
         <activity android:name=".activity.MainActivity" />
