@@ -38,10 +38,4 @@ class Tutorial3Activity : AppCompatActivity() {
         Log.w("UMA_worker", prefs.getBoolean(getString(R.string.pref_previously_started), false).toString())
 
     }
-    fun updateFragment(){
-        val fragTransaction = fm.beginTransaction()
-        fragTransaction.detach(popup)
-        fragTransaction.attach(popup)
-        Log.d("frafra","fragment updated")
-    }
 }

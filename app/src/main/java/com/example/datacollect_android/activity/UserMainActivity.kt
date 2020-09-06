@@ -19,6 +19,7 @@ import com.example.datacollect_android.etc.AlarmReceiver
 import com.example.datacollect_android.etc.BootReceiver
 import com.example.datacollect_android.etc.DataCollectWorker
 import com.example.datacollect_android.R
+import com.example.datacollect_android.etc.WakefulIntentService
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_user_main.*
 import java.util.*
@@ -68,6 +69,8 @@ class UserMainActivity : AppCompatActivity() {
                 }
             })
         }
+        Log.d("wakeful", "periodic")
+
     }
 
     fun cancelWork() {
