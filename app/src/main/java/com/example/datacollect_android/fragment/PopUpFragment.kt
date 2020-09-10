@@ -94,7 +94,6 @@ class PopUpFragment : DialogFragment() {
         dialog?.setTitle("권한요청")
     }
 
-
     fun ifPermitted(): Boolean{
         mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,android.os.Process.myUid(), activity!!.getPackageName());
 

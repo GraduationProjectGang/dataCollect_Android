@@ -2,10 +2,7 @@ package com.example.datacollect_android.activity
 
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -20,7 +17,9 @@ import com.example.datacollect_android.etc.BootReceiver
 import com.example.datacollect_android.etc.DataCollectWorker
 import com.example.datacollect_android.R
 import com.example.datacollect_android.etc.WakefulIntentService
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_user_main.*
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -32,7 +31,7 @@ class UserMainActivity : AppCompatActivity() {
         init()
     }
 
-    private fun createWorker() {//init Periodic work
+    public fun createWorker() {//init Periodic work
 
         val uniqueWorkName = "DataCollectWorker"
 
@@ -40,9 +39,9 @@ class UserMainActivity : AppCompatActivity() {
             .setRequiresCharging(false)
             .build()
 
-        //15분 마다 반복
+        //20분 마다 반복
         val collectRequest =
-            PeriodicWorkRequestBuilder<DataCollectWorker>(15, TimeUnit.MINUTES)
+            OneTimeWorkRequestBuilder<DataCollectWorker>()
                 .setConstraints(constraints)
                 .addTag("DCWorker")
                 .build()
@@ -56,20 +55,23 @@ class UserMainActivity : AppCompatActivity() {
 //                collectRequest
 //            )
         val workManager = WorkManager.getInstance(applicationContext)
-
         workManager?.let {
-            it.enqueueUniquePeriodicWork(uniqueWorkName, ExistingPeriodicWorkPolicy.KEEP, collectRequest)
-            val statusLiveData = it.getWorkInfosForUniqueWorkLiveData(uniqueWorkName)
-            statusLiveData.observe(this, androidx.lifecycle.Observer {
-                Log.w("workstatus", "state: ${it[0].state}")
-                if (it[0].state == WorkInfo.State.BLOCKED || it[0].state == WorkInfo.State.CANCELLED || it[0].state == WorkInfo.State.FAILED) {
-                    val fbDatabase = FirebaseDatabase.getInstance()
-                    val dbReference = fbDatabase.reference
-                    dbReference.child("user").child(u_key).child("isRunning").setValue("false")
-                }
-            })
+            it.enqueue(collectRequest)
         }
-        Log.d("wakeful", "periodic")
+
+//        workManager?.let {
+//            it.enqueueUniquePeriodicWork(uniqueWorkName, ExistingPeriodicWorkPolicy.KEEP, collectRequest)
+//            val statusLiveData = it.getWorkInfosForUniqueWorkLiveData(uniqueWorkName)
+//            statusLiveData.observe(this, androidx.lifecycle.Observer {
+//                Log.w("workstatus", "state: ${it[0].state}")
+//                if (it[0].state == WorkInfo.State.BLOCKED || it[0].state == WorkInfo.State.CANCELLED || it[0].state == WorkInfo.State.FAILED) {
+//                    val fbDatabase = FirebaseDatabase.getInstance()
+//                    val dbReference = fbDatabase.reference
+//                    dbReference.child("user").child(u_key).child("isRunning").setValue("false")
+//                }
+//            })
+//        }
+        Log.d("fcm", "request enqueued")
 
     }
 
@@ -79,6 +81,23 @@ class UserMainActivity : AppCompatActivity() {
     }
 
     fun init() {
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("fcm", "getInstanceId failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+                // Get new Instance ID token
+                val token = task.result?.token
+
+                // Log and toast
+                val msg = "token: " + token
+                Log.d("fcm", msg)
+                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+            })
+
+
         val mystring = "프로젝트 가이드 다시보기"
         val content = SpannableString(mystring)
         content.setSpan(UnderlineSpan(), 0, mystring.length, 0)
@@ -104,7 +123,7 @@ class UserMainActivity : AppCompatActivity() {
             edit.commit()
 
 
-            createWorker()
+//            createWorker()
         }
 
         setAlarmAt(10)
@@ -123,7 +142,7 @@ class UserMainActivity : AppCompatActivity() {
             receiver,
             PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
             PackageManager.DONT_KILL_APP
-        );
+        )
 
         var i = 0
         emergency.setOnClickListener {
@@ -136,9 +155,7 @@ class UserMainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Worker Enqueued", Toast.LENGTH_SHORT).show()
             }
         }
-
-        createWorker()
-
+//        createWorker()
     }
 
     fun setAlarmAt(RequestCode: Int) {
