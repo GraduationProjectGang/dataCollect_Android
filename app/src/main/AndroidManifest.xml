@@ -16,7 +16,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
-
     <application
         android:name=".etc.MyApplication"
         android:allowBackup="true"
@@ -25,6 +24,9 @@
         android:roundIcon="@mipmap/ic_stressy"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
         <service
             android:name=".etc.MessagingService"
             android:exported="false">

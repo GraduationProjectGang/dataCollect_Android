@@ -12,12 +12,11 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.*
-import com.example.datacollect_android.etc.AlarmReceiver
-import com.example.datacollect_android.etc.BootReceiver
-import com.example.datacollect_android.etc.DataCollectWorker
 import com.example.datacollect_android.R
-import com.example.datacollect_android.etc.WakefulIntentService
+import com.example.datacollect_android.etc.*
+import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_user_main.*
@@ -25,9 +24,11 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class UserMainActivity : AppCompatActivity() {
+    lateinit var mFirebaseAnalytics: FirebaseAnalytics
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_main)
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         init()
     }
 
@@ -129,6 +130,7 @@ class UserMainActivity : AppCompatActivity() {
         setAlarmAt(10)
 
         button_survey.setOnClickListener {
+            sendEventGoogleAnalytics("button_survey","onClick")
             val intent = Intent(this, StressCollectActivity::class.java)
             startActivity(intent)
         }
@@ -181,5 +183,12 @@ class UserMainActivity : AppCompatActivity() {
             val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
             alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,pendingIntent)
         }
+    }
+
+    fun sendEventGoogleAnalytics(id:String, name:String) {
+        var bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID,id)
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME,name)
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT,bundle)
     }
 }
